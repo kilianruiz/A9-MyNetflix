@@ -1,0 +1,57 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #141414;
+  color: white;
+  margin: 0;
+  padding: 20px;
+}
+
+.navbar-logo {
+  width: 50px; 
+  height: auto; 
+}
+
+.top-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.top-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-number {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px; 
+  font-size: 12rem;
+  font-weight: bold;
+  color: #000000; 
+  -webkit-text-stroke: 0.5px #FFFFFF; 
+}
+
+.movie-poster {
+  width: 150px;
+  height: 225px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.btn-outline-success {
+border-color: red; 
+color: red; 
+}
+
+.btn-outline-success:hover {
+background-color: black; 
+color: white; 
+border-color: red;
+}
