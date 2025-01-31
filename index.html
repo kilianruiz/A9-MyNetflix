@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
-<nav class="navbar">
+  <nav class="navbar">
     <div class="container-fluid">
         <img src="./img/logo.png" alt="" class="navbar-logo">
       <form class="d-flex" role="search">
@@ -16,37 +16,47 @@
         <button class="btn btn-outline-success" type="submit">Buscar</button>
       </form>
     </div>
-</nav>
-<br><br>
-    <h4>Top 5 mas gustadas</h4>
-  <div class="top-container">
-    <div class="top-item">
-      <div class="top-number">1</div>
-      <img src="./img/bb.webp" alt="Movie 1" class="movie-poster">
-    </div>
-
-    <div class="top-item">
-      <div class="top-number">2</div>
-      <img src="./img/lcdp1.png" alt="Movie 2" class="movie-poster">
-    </div>
-
-    <div class="top-item">
-      <div class="top-number">3</div>
-      <img src="./img/ff8.webp" alt="Movie 3" class="movie-poster">
-    </div>
-
-    <div class="top-item">
-      <div class="top-number">4</div>
-      <img src="./img/st.webp" alt="Movie 4" class="movie-poster">
-    </div>
-
-    <div class="top-item">
-      <div class="top-number">5</div>
-      <img src="./img/pb.png" alt="Movie 5" class="movie-poster">
-    </div>
+  </nav>
+  <br><br>
+  <h4>Top 5 más gustadas</h4>
+  <div class="top-container" id="top-container">
+    <!-- Las películas se cargarán aquí dinámicamente -->
   </div>
 
-
+  <script src="js/script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <script>
+    // Hacer la solicitud a la API PHP para obtener las películas
+    fetch('./php/movies.php')  
+      .then(response => response.json())
+      .then(movies => {
+        const topContainer = document.getElementById('top-container');
+        
+        movies.forEach((movie, index) => {
+          const movieItem = document.createElement('div');
+          movieItem.classList.add('top-item');
+
+          const movieNumber = document.createElement('div');
+          movieNumber.classList.add('top-number');
+          movieNumber.textContent = index + 1;
+          movieItem.appendChild(movieNumber);
+
+          const movieLink = document.createElement('a');
+          movieLink.href = `detalle.html?movie=${movie.id}`;
+          
+          const movieImg = document.createElement('img');
+          movieImg.src = movie.poster;  // La ruta de la imagen viene de la base de datos
+          movieImg.alt = movie.title;
+          movieImg.classList.add('movie-poster');
+          
+          movieLink.appendChild(movieImg);
+          movieItem.appendChild(movieLink);
+
+          topContainer.appendChild(movieItem);
+        });
+      })
+      .catch(error => console.error('Error al cargar las películas:', error));
+  </script>
 </body>
 </html>
