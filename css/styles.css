@@ -8,9 +8,21 @@ body {
 
 .navbar-logo {
   width: 50px; 
-  height: auto; 
+  height: auto;
+  margin-right: 15px; 
+  padding-left: -5%;
 }
 
+.navbar {
+  padding: 10px 15px;
+  margin-top: 5px;
+  height: 40px;
+}
+
+.form-control {
+  margin-top: 13px;
+  height: 40px;
+}
 .top-container {
   display: flex;
   justify-content: space-between;
@@ -45,9 +57,21 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
+.btn-outline-light{
+  border-color: red; 
+  color: red; 
+}
+
+.btn-outline-light:hover{
+  background-color: black; 
+  color: white; 
+  border-color: red;
+}
+
 .btn-outline-success {
 border-color: red; 
 color: red; 
+margin: 1%;
 }
 
 .btn-outline-success:hover {
@@ -58,9 +82,98 @@ border-color: red;
 
 /* Asegúrate de que la imagen esté alineada a la izquierda */
 #moviePoster {
-  width: 66%; /* Hace que la imagen ocupe el 33% del ancho de la pantalla */
-  margin-right: 20px; /* Agrega un margen a la derecha de la imagen */
-  margin-top: 20px; /* Agrega un margen superior (si deseas un poco de espacio en la parte superior) */
-  margin-left: 0; /* No hay margen a la izquierda porque la imagen está alineada a la izquierda */
-  object-fit: cover; /* Hace que la imagen cubra el espacio disponible sin distorsionarse */
+  width: 66%; 
+  margin-right: 20px; 
+  margin-top: 20px; 
+  margin-left: 0; 
+  object-fit: cover; 
+}
+
+
+/*  */
+/* Estilos generales para el modal */
+.modal-content {
+  background-color: #141414; /* Fondo oscuro similar al de Netflix */
+  color: white; /* Texto blanco */
+  border-radius: 10px;
+  border: none;
+}
+
+/* Título del modal */
+.modal-header {
+  border-bottom: none;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Estilo del cuerpo del modal */
+.modal-body {
+  padding: 20px;
+}
+
+/* Estilos para las pestañas (tabs) */
+.nav-tabs {
+  border: none;
+}
+
+.nav-link {
+  color: #fff;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+}
+
+.nav-link.active {
+  background-color: #e50914; /* Rojo característico de Netflix */
+  color: white;
+}
+
+/* Estilos para los formularios */
+.form-control {
+  background-color: #fffefe;
+  border: 1px solid #e50914;
+  color: white;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.form-control:focus {
+  background-color: #444;
+  border-color: #e50914; /* Rojo característico de Netflix */
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+#loginPassword{
+  color: red !important;
+}
+
+::placeholder {
+  color: #e50914; /* Rojo de Netflix */
+}
+
+.btn-primary {
+  background-color: #e50914; /* Rojo de Netflix */
+  border: none;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.btn-primary:hover {
+  background-color: #b20710; /* Rojo más oscuro al pasar el mouse */
+}
+
+.btn-close {
+  background-color: transparent;
+  border: none;
+  color: white;
+}
+
+.mb-3 {
+  margin-bottom: 20px;
 }
