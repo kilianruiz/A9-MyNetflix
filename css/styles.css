@@ -55,3 +55,12 @@ background-color: black;
 color: white; 
 border-color: red;
 }
+
+/* Asegúrate de que la imagen esté alineada a la izquierda */
+#moviePoster {
+  width: 66%; /* Hace que la imagen ocupe el 33% del ancho de la pantalla */
+  margin-right: 20px; /* Agrega un margen a la derecha de la imagen */
+  margin-top: 20px; /* Agrega un margen superior (si deseas un poco de espacio en la parte superior) */
+  margin-left: 0; /* No hay margen a la izquierda porque la imagen está alineada a la izquierda */
+  object-fit: cover; /* Hace que la imagen cubra el espacio disponible sin distorsionarse */
+}
