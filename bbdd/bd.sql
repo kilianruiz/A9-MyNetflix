@@ -1,4 +1,3 @@
--- Crear la base de datos
 CREATE DATABASE myNetflixDB;
 USE myNetflixDB;
 
@@ -57,14 +56,15 @@ CREATE TABLE usuarios (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100),
   email VARCHAR(100) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL, 
   fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Insertar datos en la tabla de usuarios
-INSERT INTO usuarios (nombre, email) VALUES
-('Carlos García', 'carlos@correo.com'),
-('Ana López', 'ana@correo.com'),
-('Pedro Martínez', 'pedro@correo.com');
+INSERT INTO usuarios (nombre, email, password) VALUES
+('Kilian Ruiz', 'kilian@gmail.com', '$2b$12$RhUYA1WMgaUpw3zQegXRYeAg3PpOaOhsLLCSmiUnvdAhNw5UHu/AK'),
+('Hugo Alda', 'hugo@gmail.com', '$2b$12$9RzCMHtfRNhWx.5rtRdPOeISu74e7nRYu8nckS2.ujtHFosKe8xDK'),
+('Alberto DeSantos', 'alberto@gmail.com', '$2b$12$LMQ1gj128E2uTL0fWP697./P/pJIJVxw3TLBjpncQSQBB8emRMJji');
 
 -- Tabla de Roles
 CREATE TABLE roles (
@@ -88,9 +88,9 @@ CREATE TABLE usuario_rol (
 
 -- Asignar roles a los usuarios
 INSERT INTO usuario_rol (usuario_id, rol_id) VALUES
-(1, 1),  -- Carlos -> Admin
-(2, 2),  -- Ana -> Suscriptor
-(3, 2);  -- Pedro -> Suscriptor
+(1, 1),  -- Kilian -> Admin
+(2, 2),  -- Hugo -> Suscriptor
+(3, 2);  -- Alberto -> Suscriptor
 
 -- Tabla de Likes
 CREATE TABLE likes (
@@ -103,6 +103,6 @@ CREATE TABLE likes (
 
 -- Insertar likes de los usuarios
 INSERT INTO likes (usuario_id, pelicula_id) VALUES
-(2, 1),  -- Ana le da like a Breaking Bad
-(3, 2),  -- Pedro le da like a La Casa de Papel
-(1, 4);  -- Carlos le da like a Stranger Things
+(2, 1),  -- Kilian le da like a Breaking Bad
+(3, 2),  -- Hugo le da like a La Casa de Papel
+(1, 4);  -- Alberto le da like a Stranger Things
