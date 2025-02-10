@@ -1,12 +1,17 @@
 <?php
-header('Content-Type: application/json'); 
+    header('Content-Type: application/json'); 
 
-include '../bbdd/db.php'; 
+    require_once '../bbdd/db.php'; 
 
-$query = 'SELECT * FROM peliculas';
-$stmt = $pdo->query($query);
+    try {
 
-$movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Consulta para obtener todas las películas con sus detalles
+        $stmt = $pdo->query("SELECT * FROM peliculas ORDER BY likes DESC");
+        $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-echo json_encode($movies);
+        echo json_encode($movies);
+    } catch (PDOException $e) {
+        http_response_code(500);
+        echo json_encode(['error' => $e->getMessage()]);
+    }
 ?>

@@ -1,3 +1,4 @@
+/* Estilos generales */
 body {
   font-family: Arial, sans-serif;
   background-color: #141414;
@@ -6,23 +7,23 @@ body {
   padding: 20px;
 }
 
+/* Navbar */
 .navbar-logo {
   width: 50px; 
   height: auto;
   margin-right: 15px; 
-  padding-left: -5%;
 }
-
 .navbar {
   padding: 10px 15px;
   margin-top: 5px;
   height: 40px;
 }
-
 .form-control {
   margin-top: 13px;
   height: 40px;
 }
+
+/* Contenedor principal de películas */
 .top-container {
   display: flex;
   justify-content: space-between;
@@ -31,13 +32,11 @@ body {
   max-width: 100%;
   overflow-x: auto;
 }
-
 .top-item {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-
 .top-number {
   display: flex;
   justify-content: center;
@@ -48,7 +47,6 @@ body {
   color: #000000; 
   -webkit-text-stroke: 0.5px #FFFFFF; 
 }
-
 .movie-poster {
   width: 150px;
   height: 225px;
@@ -57,30 +55,28 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-.btn-outline-light{
+/* Botones personalizados */
+.btn-outline-light {
   border-color: red; 
   color: red; 
 }
-
-.btn-outline-light:hover{
+.btn-outline-light:hover {
+  background-color: black; 
+  color: white; 
+  border-color: red;
+}
+.btn-outline-success {
+  border-color: red; 
+  color: red; 
+  margin: 1%;
+}
+.btn-outline-success:hover {
   background-color: black; 
   color: white; 
   border-color: red;
 }
 
-.btn-outline-success {
-border-color: red; 
-color: red; 
-margin: 1%;
-}
-
-.btn-outline-success:hover {
-background-color: black; 
-color: white; 
-border-color: red;
-}
-
-/* Asegúrate de que la imagen esté alineada a la izquierda */
+/* Imagen alineada a la izquierda */
 #moviePoster {
   width: 66%; 
   margin-right: 20px; 
@@ -89,36 +85,28 @@ border-color: red;
   object-fit: cover; 
 }
 
-
-/*  */
-/* Estilos generales para el modal */
+/* Modal general */
 .modal-content {
   background-color: #141414; /* Fondo oscuro similar al de Netflix */
   color: white; /* Texto blanco */
   border-radius: 10px;
   border: none;
 }
-
-/* Título del modal */
 .modal-header {
   border-bottom: none;
 }
-
 .modal-title {
   font-size: 24px;
   font-weight: bold;
 }
-
-/* Estilo del cuerpo del modal */
 .modal-body {
   padding: 20px;
 }
 
-/* Estilos para las pestañas (tabs) */
+/* Pestañas (tabs) */
 .nav-tabs {
   border: none;
 }
-
 .nav-link {
   color: #fff;
   border: none;
@@ -126,13 +114,12 @@ border-color: red;
   font-weight: bold;
   padding: 10px 20px;
 }
-
 .nav-link.active {
   background-color: #e50914; /* Rojo característico de Netflix */
   color: white;
 }
 
-/* Estilos para los formularios */
+/* Formularios */
 .form-control {
   background-color: #fffefe;
   border: 1px solid #e50914;
@@ -141,21 +128,19 @@ border-color: red;
   padding: 10px;
   margin-bottom: 15px;
 }
-
 .form-control:focus {
   background-color: #444;
   border-color: #e50914; /* Rojo característico de Netflix */
   box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
 }
-
-#loginPassword{
+#loginPassword {
   color: red !important;
 }
-
 ::placeholder {
   color: #e50914; /* Rojo de Netflix */
 }
 
+/* Botones primarios */
 .btn-primary {
   background-color: #e50914; /* Rojo de Netflix */
   border: none;
@@ -163,17 +148,88 @@ border-color: red;
   padding: 10px;
   border-radius: 5px;
 }
-
 .btn-primary:hover {
   background-color: #b20710; /* Rojo más oscuro al pasar el mouse */
 }
 
+/* Botón de cierre del modal */
 .btn-close {
   background-color: transparent;
   border: none;
   color: white;
 }
 
+/* Margen inferior */
 .mb-3 {
   margin-bottom: 20px;
+}
+
+/* Ajustes adicionales para el modal SweetAlert */
+.swal2-popup {
+  background-color: #141414; /* Fondo oscuro similar al de Netflix */
+  color: white; /* Texto blanco */
+  font-family: Arial, sans-serif;
+  max-height: 90vh; /* Aumenta la altura del modal */
+  overflow-y: auto; /* Habilita desplazamiento vertical si es necesario */
+}
+.swal2-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+.swal2-content {
+  color: white;
+}
+.swal2-confirm {
+  background-color: #e50914; /* Rojo característico de Netflix */
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+.swal2-confirm:hover {
+  background-color: #b20710; /* Rojo más oscuro al pasar el mouse */
+}
+
+/* Estilo para imágenes dentro del modal SweetAlert */
+.image-container img {
+  width: 100%; /* Asegura que la imagen llene el ancho del contenedor */
+  height: 400px; /* Altura fija para todas las imágenes (ajustada) */
+  object-fit: cover; /* Mantén las proporciones originales y recorta si es necesario */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+/* Separador vertical entre imagen y detalles */
+.details-container::before {
+  content: '';
+  position: absolute;
+  left: -20px; /* Distancia desde el borde izquierdo */
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: #ccc; /* Color de la línea */
+}
+
+/* Estilo para el botón de like */
+.like-btn {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.like-btn i {
+  margin-right: 5px;
+}
+
+.like-btn.liked {
+  color: red; /* Cambia el color cuando se da like */
+}
+
+.likes-container {
+  margin-top: 10px;
 }
