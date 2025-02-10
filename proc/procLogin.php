@@ -5,17 +5,17 @@ require_once '../bbdd/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Obtén los datos del formulario
-    $username = $_POST['username'] ?? ''; 
+    $nombre = $_POST['username'] ?? ''; 
     $password = $_POST['password'] ?? ''; 
 
-    if (empty($username) || empty($password)) {
+    if (empty($nombre) || empty($password)) {
         echo 'Por favor ingresa tu nombre de usuario y contraseña.';
         exit;
     }
 
     try {
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
-        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE nombre = :nombre");
+        $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
         $stmt->execute();
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);

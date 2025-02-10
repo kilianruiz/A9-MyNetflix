@@ -62,9 +62,9 @@ CREATE TABLE usuarios (
 
 -- Insertar datos en la tabla de usuarios
 INSERT INTO usuarios (nombre, email, password) VALUES
-('Kilian Ruiz', 'kilian@gmail.com', '$2b$12$RhUYA1WMgaUpw3zQegXRYeAg3PpOaOhsLLCSmiUnvdAhNw5UHu/AK'),
-('Hugo Alda', 'hugo@gmail.com', '$2b$12$9RzCMHtfRNhWx.5rtRdPOeISu74e7nRYu8nckS2.ujtHFosKe8xDK'),
-('Alberto DeSantos', 'alberto@gmail.com', '$2b$12$LMQ1gj128E2uTL0fWP697./P/pJIJVxw3TLBjpncQSQBB8emRMJji');
+('Kilian', 'kilian@gmail.com', '$2b$12$RhUYA1WMgaUpw3zQegXRYeAg3PpOaOhsLLCSmiUnvdAhNw5UHu/AK'),
+('Hugo', 'hugo@gmail.com', '$2b$12$9RzCMHtfRNhWx.5rtRdPOeISu74e7nRYu8nckS2.ujtHFosKe8xDK'),
+('Alberto', 'alberto@gmail.com', '$2b$12$LMQ1gj128E2uTL0fWP697./P/pJIJVxw3TLBjpncQSQBB8emRMJji');
 
 -- Tabla de Roles
 CREATE TABLE roles (
