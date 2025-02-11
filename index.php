@@ -1,3 +1,8 @@
+<?php
+
+  session_start();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +16,7 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-      <img src="./img/logo.png" alt="" class="navbar-logo">
+      <img src="./img/logo-grande.png" alt="" class="navbar-logo">
       <form class="d-flex flex-grow-1" role="search" id="searchForm">
         <input class="form-control" type="search" placeholder="Buscar..." aria-label="Search" id="searchQuery">
         <button class="btn btn-outline-success" type="submit">Buscar</button>
@@ -76,10 +81,11 @@
     </div>
   </div>
 
-  <br><br>
-  <h4>Top 5 series/peliculas más gustadas</h4>
-  <div class="top-container" id="top-container">
-    <!-- Las películas se cargarán aquí dinámicamente -->
+  <div class="pelis">
+    <h4>Top 5 series/peliculas más gustadas</h4>
+    <div class="top-container" id="top-container">
+      <!-- Las películas se cargarán aquí dinámicamente -->
+    </div>
   </div>
 
   <script src="js/script.js"></script> 
