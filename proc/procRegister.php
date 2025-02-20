@@ -28,14 +28,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
         
         // Insertar nuevo usuario
-        $stmt = $conn->prepare("INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO usuarios (nombre, email, password, id_rol) VALUES (?, ?, ?, 2)"); // 2 es el ID del rol Suscriptor
         $stmt->execute([$nombre, $email, $hashedPassword]);
         
-        // Asignar rol de Suscriptor por defecto
-        $userId = $conn->lastInsertId();
-        $stmt = $conn->prepare("INSERT INTO usuario_rol (usuario_id, rol_id) VALUES (?, 2)"); // 2 es el ID del rol Suscriptor
-        $stmt->execute([$userId]);
-
+        // Ya no necesitamos la tabla usuario_rol porque ahora el rol está en la tabla usuarios
         echo json_encode(['success' => true, 'message' => 'Usuario registrado correctamente']);
     } catch (PDOException $e) {
         echo json_encode(['success' => false, 'message' => 'Error al registrar el usuario']);
