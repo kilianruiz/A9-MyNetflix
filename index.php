@@ -20,7 +20,7 @@
       <form class="d-flex flex-grow-1" role="search" id="searchForm">
         <input class="form-control" type="search" placeholder="Buscar..." aria-label="Search" id="searchQuery">
         <button class="btn btn-outline-success" type="submit">Buscar</button>
-      </form>
+      </form>      
       <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginModal">Login/Register</button>
     </div>
   </nav>
@@ -59,18 +59,18 @@
             </div>
             <!-- Register Form -->
             <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
-              <form>
+              <form action="./proc/procRegister.php" method="POST">
+                <div class="mb-3">
+                  <label for="registerName" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" name="nombre" id="registerName" placeholder="Enter name">
+                </div>
                 <div class="mb-3">
                   <label for="registerEmail" class="form-label">Email address</label>
-                  <input type="email" class="form-control" id="registerEmail" placeholder="Enter email">
+                  <input type="email" class="form-control" name="email" id="registerEmail" placeholder="Enter email">
                 </div>
                 <div class="mb-3">
                   <label for="registerPassword" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="registerPassword" placeholder="Password">
-                </div>
-                <div class="mb-3">
-                  <label for="registerConfirmPassword" class="form-label">Confirm Password</label>
-                  <input type="password" class="form-control" id="registerConfirmPassword" placeholder="Confirm password">
+                  <input type="password" class="form-control" name="password" id="registerPassword" placeholder="Password">
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Register</button>
               </form>

@@ -23,9 +23,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (password_verify($password, $user['password'])) {
                 $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
-                echo '¡Login correcto!';
-                header("Location: ../index.html?id=$user[id]");
+                $_SESSION['username'] = $user['nombre'];
+
+                // Consultar el rol del usuario
+                $stmt_rol = $pdo->prepare("
+                    SELECT r.id as rol_id 
+                    FROM usuario_rol ur 
+                    JOIN roles r ON ur.rol_id = r.id 
+                    WHERE ur.usuario_id = :user_id
+                ");
+                $stmt_rol->bindParam(':user_id', $user['id'], PDO::PARAM_INT);
+                $stmt_rol->execute();
+                $rol = $stmt_rol->fetch(PDO::FETCH_ASSOC);
+
+                // Redirigir según el rol
+                if ($rol['rol_id'] == 1) {
+                    header("Location: ../admin/gestionAdmin.php");
+                } else {
+                    header("Location: ../index.php");
+                }
                 exit;
             } else {
 
