@@ -7,16 +7,65 @@ CREATE TABLE peliculas (
   title VARCHAR(255),
   poster VARCHAR(255),
   descripcion TEXT,
+  autor VARCHAR(255),
+  fecha_lanzamiento DATE,
+  reparto TEXT,
+  trailer TEXT,
   likes INT
 );
 
 -- Insertar datos en la tabla de películas
-INSERT INTO peliculas (title, poster, descripcion, likes) VALUES
-('Breaking Bad', './img/bb.webp', 'Serie de drama sobre un profesor de química que se convierte en fabricante de metanfetaminas.', 250),
-('La Casa de Papel', './img/lcdp.webp', 'Un grupo de delincuentes lleva a cabo un asalto a la Real Casa de la Moneda de España.', 150),
-('Fast & Furious 8', './img/ff8.webp', 'La octava entrega de la saga Fast & Furious, centrada en traiciones y carreras de autos.', 300),
-('Stranger Things', './img/st.webp', 'Serie de ciencia ficción y terror que sigue a un grupo de niños enfrentándose a criaturas de otro mundo.', 400),
-('Peaky Blinders', './img/pb.png', 'La historia de la familia Shelby y su banda criminal en el post-guerra de Inglaterra.', 180);
+INSERT INTO peliculas (title, poster, descripcion, autor, fecha_lanzamiento, reparto, trailer, likes) VALUES
+(
+  'Breaking Bad', 
+  './img/bb.webp', 
+  'Breaking Bad sigue la historia de Walter White, un profesor de química de secundaria en Albuquerque, Nuevo México, que tras ser diagnosticado con cáncer de pulmón terminal, decide fabricar metanfetamina junto a su exalumno Jesse Pinkman para asegurar el futuro económico de su familia. A medida que avanza la serie, Walter se convierte en un implacable narcotraficante conocido como "Heisenberg", enfrentándose a peligrosos criminales y desafiando las leyes morales.', 
+  'Vince Gilligan', 
+  '2008-01-20', 
+  'Bryan Cranston, Aaron Paul, Anna Gunn, Dean Norris, Betsy Brandt', 
+  'https://www.youtube.com/watch?v=HhesaQXLuRY',
+  250
+),
+(
+  'La Casa de Papel', 
+  './img/lcdp.webp', 
+  'Un grupo de ocho ladrones liderados por "El Profesor" lleva a cabo un audaz atraco en la Fábrica Nacional de Moneda y Timbre de España. Mientras mantienen rehenes dentro del edificio, deben enfrentarse a la policía y resolver conflictos internos. La serie combina acción, drama y suspenso mientras explora temas como la justicia, la resistencia y el sacrificio.', 
+  'Álex Pina', 
+  '2017-05-02', 
+  'Álvaro Morte, Úrsula Corberó, Itziar Ituño, Pedro Alonso, Miguel Herrán', 
+  'https://www.youtube.com/watch?v=3y-6iaveY6c', 
+  150
+),
+(
+  'Fast & Furious 8', 
+  './img/ff8.webp', 
+  'En esta octava entrega de la saga Fast & Furious, Dominic Toretto (Vin Diesel) traiciona a su familia al aliarse con la villana Cipher (Charlize Theron). Mientras tanto, su equipo debe unirse para detener una conspiración global que involucra vehículos autónomos y armas de destrucción masiva. La película combina escenas de alta velocidad, emociones intensas y momentos de camaradería.', 
+  'F. Gary Gray', 
+  '2017-04-14', 
+  'Vin Diesel, Dwayne Johnson, Charlize Theron, Michelle Rodriguez, Jason Statham', 
+  'https://www.youtube.com/watch?v=uisBaTkQAEs&t=1s', 
+  300
+),
+(
+  'Stranger Things', 
+  './img/st.webp', 
+  'Ambientada en los años 80 en el pequeño pueblo de Hawkins, Indiana, Stranger Things sigue a un grupo de niños que descubren un mundo paralelo llamado "El Mundo del Revés" después de que su amigo Will Byers desaparece misteriosamente. Con la ayuda de una niña con poderes telequinéticos llamada Eleven, enfrentan criaturas sobrenaturales y secretos gubernamentales mientras intentan salvar a su amigo. La serie mezcla elementos de ciencia ficción, horror y nostalgia ochentera.', 
+  'Matt Duffer, Ross Duffer', 
+  '2016-07-15', 
+  'Millie Bobby Brown, Finn Wolfhard, Winona Ryder, David Harbour, Gaten Matarazzo', 
+  'https://www.youtube.com/embed/R1ZXOOLMJ8s?si=saLssPK39f2_SC3X', 
+  400
+),
+(
+  'Prison Break', 
+  './img/pb.png', 
+  'Ambientada en Birmingham, Inglaterra, tras la Primera Guerra Mundial, Peaky Blinders narra la historia de la familia Shelby y su banda criminal, liderada por Tommy Shelby (Cillian Murphy). La serie explora cómo la familia construye un imperio del crimen mientras enfrenta amenazas externas, traiciones internas y el ascenso político. Con un estilo visual único y una banda sonora icónica, la serie combina drama, acción y política.', 
+  'Steven Knight', 
+  '2013-09-12', 
+  'Cillian Murphy, Helen McCrory, Paul Anderson, Tom Hardy, Sophie Rundle', 
+  'https://www.youtube.com/watch?v=AL9zLctDJaU&t=1s', 
+  180
+);
 
 -- Tabla de Categorías
 CREATE TABLE categorias (

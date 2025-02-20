@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 echo '¡Login correcto!';
-                header('Location: index.html?bien');
+                header("Location: ../index.html?id=$user[id]");
                 exit;
             } else {
 
