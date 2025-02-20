@@ -25,19 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['nombre'];
 
-                // Consultar el rol del usuario
-                $stmt_rol = $pdo->prepare("
-                    SELECT r.id as rol_id 
-                    FROM usuario_rol ur 
-                    JOIN roles r ON ur.rol_id = r.id 
-                    WHERE ur.usuario_id = :user_id
-                ");
-                $stmt_rol->bindParam(':user_id', $user['id'], PDO::PARAM_INT);
-                $stmt_rol->execute();
-                $rol = $stmt_rol->fetch(PDO::FETCH_ASSOC);
-
-                // Redirigir según el rol
-                if ($rol['rol_id'] == 1) {
+                // Verificar el rol directamente de la tabla usuarios
+                if ($user['id_rol'] == 1) {
                     header("Location: ../admin/gestionAdmin.php");
                 } else {
                     header("Location: ../index.php");
