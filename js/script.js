@@ -75,45 +75,52 @@ function showMovieModal(movie) {
 
 // Función para alternar el like
 function toggleLike(movieId, likeBtn) {
-  const currentLikes = parseInt(likeBtn.textContent.match(/\d+/)[0], 10); // Obtener el número actual de likes
-  likeBtn.disabled = true; // Desactivar temporalmente el botón
+  // Verificar si el usuario está logueado
+  if (!userId) {
+    Swal.fire({
+      title: 'Necesitas iniciar sesión',
+      text: 'Para dar like necesitas estar registrado',
+      icon: 'warning',
+      showConfirmButton: true
+    });
+    return;
+  }
 
-  // Determinar si se debe añadir o quitar el like
+  const currentLikes = parseInt(likeBtn.textContent.match(/\d+/)[0], 10);
+  likeBtn.disabled = true;
+
   const action = likeBtn.classList.contains('liked') ? 'remove' : 'add';
 
-  console.log('Datos enviados:', { movieId, action }); // Mensaje de depuración
-
-  // Enviar solicitud al servidor para actualizar los likes
   fetch('./php/toggle_like.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ movieId, action }),
   })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('Respuesta del servidor:', data); // Mensaje de depuración
-      if (data.success) {
-        // Alternar la clase "liked" para cambiar el estilo
-        likeBtn.classList.toggle('liked');
-
-        // Actualizar el texto del botón con los nuevos likes
-        const newLikes = data.newLikes;
-        likeBtn.textContent = `${likeBtn.classList.contains('liked') ? '❤️' : '🤍'} ${newLikes}`;
-      } else {
-        alert(`Error: ${data.message || 'Error desconocido'}`);
-      }
-      likeBtn.disabled = false; // Reactivar el botón
-    })
-    .catch(error => {
-      console.error('Error:', error); // Mensaje de depuración
-      alert('Error al procesar la solicitud.');
-      likeBtn.disabled = false; // Reactivar el botón en caso de error
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      likeBtn.classList.toggle('liked');
+      const newLikes = data.newLikes;
+      likeBtn.innerHTML = `${likeBtn.classList.contains('liked') ? '❤️' : '🤍'} ${newLikes}`;
+    } else {
+      Swal.fire({
+        title: 'Error',
+        text: data.message || 'Error desconocido',
+        icon: 'error'
+      });
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    Swal.fire({
+      title: 'Error',
+      text: 'Error al procesar la solicitud',
+      icon: 'error'
     });
+  })
+  .finally(() => {
+    likeBtn.disabled = false;
+  });
 }
 
 // Función para mostrar el modal del trailer
