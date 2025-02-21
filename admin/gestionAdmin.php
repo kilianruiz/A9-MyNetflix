@@ -53,82 +53,41 @@ $peliculas = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </nav>
 
     <div class="container">
-        
         <div class="registros-selector">
             <label for="registros">Mostrar:</label>
-            <select id="registros" onchange="cambiarRegistrosPorPagina(this.value)">
-                <option value="2" <?php echo $registros_por_pagina == 2 ? 'selected' : ''; ?>>2</option>
-                <option value="5" <?php echo $registros_por_pagina == 5 ? 'selected' : ''; ?>>5</option>
-                <option value="10" <?php echo $registros_por_pagina == 10 ? 'selected' : ''; ?>>10</option>
-                <option value="15" <?php echo $registros_por_pagina == 15 ? 'selected' : ''; ?>>15</option>
+            <select id="registros">
+                <option value="2">2</option>
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
             </select>
             <span>registros por página</span>
         </div>
 
-        <a href="nueva_pelicula.php" class="btn-nuevo">Nueva Película</a>
+        <a href="#" class="btn-nuevo" id="btnNuevaPelicula">Nueva Película</a>
         
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Poster</th>
-                    <th>Título</th>
-                    <th>Descripción</th>
-                    <th>Autor</th>
-                    <th>Fecha</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach($peliculas as $pelicula): ?>
-                <tr>
-                    <td><?php echo $pelicula['id_pelicula']; ?></td>
-                    <td>
-                        <img src="../<?php echo $pelicula['poster']; ?>" alt="<?php echo $pelicula['title']; ?>" class="movie-image">
-                    </td>
-                    <td><?php echo $pelicula['title']; ?></td>
-                    <td class="description-cell"><?php echo substr($pelicula['descripcion'], 0, 100) . '...'; ?></td>
-                    <td><?php echo $pelicula['autor']; ?></td>
-                    <td><?php echo $pelicula['fecha_lanzamiento']; ?></td>
-                    <td class="actions">
-                        <a href="editar_pelicula.php?id=<?php echo $pelicula['id_pelicula']; ?>" class="btn-editar">Editar</a>
-                        <form action="eliminar_pelicula.php" method="POST" style="display: inline;">
-                            <input type="hidden" name="id" value="<?php echo $pelicula['id_pelicula']; ?>">
-                            <button type="submit" class="btn-eliminar" onclick="return confirm('¿Está seguro de eliminar esta película?')">Eliminar</button>
-                        </form>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-        
-        <!-- Agregar la paginación después de la tabla -->
-        <div class="pagination">
-            <?php if($pagina_actual > 1): ?>
-                <a href="?pagina=1&registros=<?php echo $registros_por_pagina; ?>">&laquo; Primera</a>
-                <a href="?pagina=<?php echo $pagina_actual - 1; ?>&registros=<?php echo $registros_por_pagina; ?>">Anterior</a>
-            <?php endif; ?>
-            
-            <?php for($i = max(1, $pagina_actual - 2); $i <= min($total_paginas, $pagina_actual + 2); $i++): ?>
-                <a href="?pagina=<?php echo $i; ?>&registros=<?php echo $registros_por_pagina; ?>" 
-                   <?php echo ($i == $pagina_actual) ? 'class="active"' : ''; ?>>
-                    <?php echo $i; ?>
-                </a>
-            <?php endfor; ?>
-            
-            <?php if($pagina_actual < $total_paginas): ?>
-                <a href="?pagina=<?php echo $pagina_actual + 1; ?>&registros=<?php echo $registros_por_pagina; ?>">Siguiente</a>
-                <a href="?pagina=<?php echo $total_paginas; ?>&registros=<?php echo $registros_por_pagina; ?>">Última &raquo;</a>
-            <?php endif; ?>
+        <div id="tablaPeliculas">
+            <!-- La tabla se cargará aquí dinámicamente -->
         </div>
-
-        <script>
-            function cambiarRegistrosPorPagina(valor) {
-                window.location.href = '?registros=' + valor + '&pagina=1';
-            }
-        </script>
     </div>
 
+    <!-- Modal para Nueva/Editar Película -->
+    <div class="modal fade" id="peliculaModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Nueva Película</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- El formulario se cargará aquí dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/admin.js"></script>
 </body>
 </html>
