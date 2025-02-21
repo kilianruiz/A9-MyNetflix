@@ -250,3 +250,158 @@ tr:hover {
     background-color: #e50914 !important;
     color: #ffffff !important;
 }
+
+/* Estilos específicos para el formulario de editar película */
+.form-control {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    color: #ffffff;
+    padding: 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #e50914;
+    box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.2);
+    outline: none;
+}
+
+.form-label {
+    color: #ffffff;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.form-check-label {
+    color: #ffffff;
+    margin-left: 8px;
+}
+
+.form-check-input {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+}
+
+.form-check-input:checked {
+    background-color: #e50914;
+    border-color: #e50914;
+}
+
+.form-check {
+    margin-bottom: 8px;
+}
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Estilo para la imagen del poster en el formulario */
+.form-control[type="file"] {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.form-control[type="file"]::-webkit-file-upload-button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-control[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #e50914;
+}
+
+/* Estilos específicos para editar_pelicula.php */
+.editar-pelicula-container .mb-3 {
+    border: 2px solid #e50914;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.editar-pelicula-container textarea.form-control {
+    min-height: 150px;
+    background-color: #2f2f2f;
+    border: 1px solid #333;
+    padding: 15px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+/* Estilos para el textarea de descripción cuando está activo */
+.editar-pelicula-container textarea.form-control:focus {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #e50914;
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.2);
+}
+
+/* Estilos para el botón volver con icono */
+.btn-volver {
+    background-color: transparent;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    border: 2px solid #e50914;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.btn-volver:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+    color: transparent; /* Oculta el texto al hacer hover */
+}
+
+.btn-volver:hover::after {
+    content: '\f2f5'; /* Código del icono "sign-out-alt" de Font Awesome */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+
+/* Estilos para el botón guardar con icono */
+.editar-pelicula-container .btn-nuevo {
+    background-color: transparent;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    border: 2px solid #e50914;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.editar-pelicula-container .btn-nuevo:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+    color: transparent; /* Oculta el texto al hacer hover */
+}
+
+.editar-pelicula-container .btn-nuevo:hover::after {
+    content: '\f0c7'; /* Código del icono "save" de Font Awesome */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    color: #ffffff;
+}
