@@ -44,7 +44,8 @@ $categorias_seleccionadas = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
     <div class="container">
         <div class="editar-pelicula-container">
-            <form action="proc_editar_pelicula.php" method="POST" enctype="multipart/form-data">
+            <form action="proc_editar_pelicula.php" method="POST" enctype="multipart/form-data" id="peliculaForm" onsubmit="return validarFormulario()">
+                <div id="mensajesError" class="alert alert-danger" style="display: none; margin-top: 20px; background-color: #2f0000; border-color: #e50914; color: white;"></div>
                 <input type="hidden" name="id" value="<?php echo $pelicula['id_pelicula']; ?>">
                 
                 <div class="mb-3">
@@ -111,5 +112,6 @@ $categorias_seleccionadas = $stmt->fetchAll(PDO::FETCH_COLUMN);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/validaciones.js"></script>
 </body>
 </html> 
