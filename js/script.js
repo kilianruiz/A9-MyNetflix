@@ -25,6 +25,64 @@ fetch('./php/movies.php')
   })
   .catch(error => console.error('Error al cargar las películas:', error));
 
+// Función para alternar el like
+function toggleLike(movieId, likeBtn) {
+  // Verificar si el usuario está logueado
+  if (!userId) {
+    Swal.fire({
+      title: 'Necesitas iniciar sesión',
+      text: 'Para dar like necesitas estar registrado',
+      icon: 'warning',
+      confirmButtonText: 'Iniciar sesión',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Abrir el modal de login
+        const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+        loginModal.show();
+      }
+    });
+    return;
+  }
+
+  const currentLikes = parseInt(likeBtn.textContent.match(/\d+/)[0], 10);
+  likeBtn.disabled = true;
+
+  const action = likeBtn.classList.contains('liked') ? 'remove' : 'add';
+
+  fetch('./php/toggle_like.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ movieId, action }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      likeBtn.classList.toggle('liked');
+      const newLikes = data.newLikes;
+      likeBtn.innerHTML = `${likeBtn.classList.contains('liked') ? '❤️' : '🤍'} ${newLikes}`;
+    } else {
+      Swal.fire({
+        title: 'Error',
+        text: data.message || 'Error desconocido',
+        icon: 'error'
+      });
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    Swal.fire({
+      title: 'Error',
+      text: 'Error al procesar la solicitud',
+      icon: 'error'
+    });
+  })
+  .finally(() => {
+    likeBtn.disabled = false;
+  });
+}
+
 // Función para mostrar el modal con los detalles de la película
 function showMovieModal(movie) {
   Swal.fire({
@@ -73,62 +131,12 @@ function showMovieModal(movie) {
   });
 }
 
-// Función para alternar el like
-function toggleLike(movieId, likeBtn) {
-  // Verificar si el usuario está logueado
-  if (!userId) {
-    Swal.fire({
-      title: 'Necesitas iniciar sesión',
-      text: 'Para dar like necesitas estar registrado',
-      icon: 'warning',
-      showConfirmButton: true
-    });
-    return;
-  }
-
-  const currentLikes = parseInt(likeBtn.textContent.match(/\d+/)[0], 10);
-  likeBtn.disabled = true;
-
-  const action = likeBtn.classList.contains('liked') ? 'remove' : 'add';
-
-  fetch('./php/toggle_like.php', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ movieId, action }),
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      likeBtn.classList.toggle('liked');
-      const newLikes = data.newLikes;
-      likeBtn.innerHTML = `${likeBtn.classList.contains('liked') ? '❤️' : '🤍'} ${newLikes}`;
-    } else {
-      Swal.fire({
-        title: 'Error',
-        text: data.message || 'Error desconocido',
-        icon: 'error'
-      });
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    Swal.fire({
-      title: 'Error',
-      text: 'Error al procesar la solicitud',
-      icon: 'error'
-    });
-  })
-  .finally(() => {
-    likeBtn.disabled = false;
-  });
-}
-
 // Función para mostrar el modal del trailer
 function showTrailerModal(trailerUrl, movieTitle) {
   Swal.fire({
     title: `Trailer de ${movieTitle}`,
     html: `
-      <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+      <div>
         <iframe src="${trailerUrl}" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
       </div>
     `,

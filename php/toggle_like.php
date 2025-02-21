@@ -23,7 +23,7 @@
             !isset($data['movieId']) || empty($data['movieId']) ||
             !isset($data['action']) || !in_array($data['action'], ['add', 'remove'])
         ) {
-            echo json_encode(['success' => false, 'message' => 'Datos incompletos o acción inválida']);
+            echo json_encode(['success' => false, 'message' => 'Faltan datos requeridos']);
             exit;
         }
 
