@@ -1,13 +1,13 @@
 <?php
     session_start();
 
-    require_once './bbdd/db.php';
+    require_once '../bbdd/db.php';
 
     // Verificar si el usuario está autenticado
-    // if (!isset($_SESSION['user_id'])) {
-    //     echo json_encode(['success' => false, 'message' => 'Debes iniciar sesión para dar like.']);
-    //     exit;
-    // }
+    if (!isset($_SESSION['user_id'])) {
+        echo json_encode(['success' => false, 'message' => 'Debes iniciar sesión para dar like.']);
+        exit;
+    }
 
     try {
 
@@ -20,7 +20,7 @@
 
         if ($action === 'add') {
             // Agregar like
-            $stmt = $pdo->prepare("INSERT INTO likes (usuario_id, pelicula_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE usuario_id=VALUES(usuario_id)");
+            $stmt = $pdo->prepare("INSERT INTO likes (usuario_id, pelicula_id) VALUES (?, ?)");
             $stmt->execute([$userId, $movieId]);
         } elseif ($action === 'remove') {
             // Quitar like

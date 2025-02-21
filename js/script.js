@@ -45,7 +45,7 @@ fetch('./php/movies.php')
               <button class="btn btn-primary swal-trailer-btn" onclick="showTrailerModal('${movie.trailer}', '${movie.title}')">Ver Trailer</button>
               <!-- Contenedor de likes -->
               <div class="likes-container mt-3">
-                <button class="like-btn" data-movie-id="${movie.id}">
+                <button class="like-btn ${movie.user_liked ? 'liked' : ''}" data-movie-id="${movie.id}">
                   <i class="fas fa-heart"></i> ${movie.likes}
                 </button>
               </div>
@@ -91,6 +91,9 @@ fetch('./php/movies.php')
         .then(data => {
           if (!data.success) {
             alert('Error al actualizar los likes.');
+            // Revertir el cambio en caso de error
+            likeBtn.classList.toggle('liked');
+            likeBtn.textContent = `${likeBtn.classList.contains('liked') ? '❤️' : '🤍'} ${currentLikes}`;
           }
         })
         .catch(error => console.error('Error:', error));

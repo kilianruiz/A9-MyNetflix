@@ -1,5 +1,5 @@
-CREATE DATABASE myNetflixDB;
-USE myNetflixDB;
+CREATE DATABASE mynetflixdb;
+USE mynetflixdb;
 
 -- Tabla de Películas
 CREATE TABLE peliculas (
