@@ -3,19 +3,18 @@ USE myNetflixDB;
 
 -- Tabla de Películas
 CREATE TABLE peliculas (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_pelicula INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255),
   poster VARCHAR(255),
   descripcion TEXT,
   autor VARCHAR(255),
   fecha_lanzamiento DATE,
   reparto TEXT,
-  trailer TEXT,
-  likes INT
+  trailer TEXT
 );
 
 -- Insertar datos en la tabla de películas
-INSERT INTO peliculas (title, poster, descripcion, autor, fecha_lanzamiento, reparto, trailer, likes) VALUES
+INSERT INTO peliculas (title, poster, descripcion, autor, fecha_lanzamiento, reparto, trailer) VALUES
 (
   'Breaking Bad', 
   './img/bb.webp', 
@@ -23,8 +22,7 @@ INSERT INTO peliculas (title, poster, descripcion, autor, fecha_lanzamiento, rep
   'Vince Gilligan', 
   '2008-01-20', 
   'Bryan Cranston, Aaron Paul, Anna Gunn, Dean Norris, Betsy Brandt', 
-  'https://www.youtube.com/watch?v=HhesaQXLuRY',
-  250
+  'https://www.youtube.com/watch?v=HhesaQXLuRY'
 ),
 (
   'La Casa de Papel', 
@@ -33,8 +31,7 @@ INSERT INTO peliculas (title, poster, descripcion, autor, fecha_lanzamiento, rep
   'Álex Pina', 
   '2017-05-02', 
   'Álvaro Morte, Úrsula Corberó, Itziar Ituño, Pedro Alonso, Miguel Herrán', 
-  'https://www.youtube.com/watch?v=3y-6iaveY6c', 
-  150
+  'https://www.youtube.com/watch?v=3y-6iaveY6c'
 ),
 (
   'Fast & Furious 8', 
@@ -43,8 +40,7 @@ INSERT INTO peliculas (title, poster, descripcion, autor, fecha_lanzamiento, rep
   'F. Gary Gray', 
   '2017-04-14', 
   'Vin Diesel, Dwayne Johnson, Charlize Theron, Michelle Rodriguez, Jason Statham', 
-  'https://www.youtube.com/watch?v=uisBaTkQAEs&t=1s', 
-  300
+  'https://www.youtube.com/watch?v=uisBaTkQAEs&t=1s'
 ),
 (
   'Stranger Things', 
@@ -53,8 +49,7 @@ INSERT INTO peliculas (title, poster, descripcion, autor, fecha_lanzamiento, rep
   'Matt Duffer, Ross Duffer', 
   '2016-07-15', 
   'Millie Bobby Brown, Finn Wolfhard, Winona Ryder, David Harbour, Gaten Matarazzo', 
-  'https://www.youtube.com/embed/R1ZXOOLMJ8s?si=saLssPK39f2_SC3X', 
-  400
+  'https://www.youtube.com/embed/R1ZXOOLMJ8s?si=saLssPK39f2_SC3X'
 ),
 (
   'Prison Break', 
@@ -63,18 +58,17 @@ INSERT INTO peliculas (title, poster, descripcion, autor, fecha_lanzamiento, rep
   'Steven Knight', 
   '2013-09-12', 
   'Cillian Murphy, Helen McCrory, Paul Anderson, Tom Hardy, Sophie Rundle', 
-  'https://www.youtube.com/watch?v=AL9zLctDJaU&t=1s', 
-  180
+  'https://www.youtube.com/watch?v=AL9zLctDJaU&t=1s'
 );
 
 -- Tabla de Categorías
 CREATE TABLE categorias (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) UNIQUE NOT NULL
+  id_categoria INT AUTO_INCREMENT PRIMARY KEY,
+  nombre_categoria VARCHAR(100) UNIQUE NOT NULL
 );
 
 -- Insertar datos en la tabla de categorías
-INSERT INTO categorias (name) VALUES
+INSERT INTO categorias (nombre_categoria) VALUES
 ('Drama'),
 ('Acción'),
 ('Ciencia Ficción'),
@@ -83,15 +77,15 @@ INSERT INTO categorias (name) VALUES
 
 -- Tabla de Relación entre Películas y Categorías
 CREATE TABLE pelicula_categoria (
-  pelicula_id INT,
-  categoria_id INT,
-  PRIMARY KEY (pelicula_id, categoria_id),
-  FOREIGN KEY (pelicula_id) REFERENCES peliculas(id) ON DELETE CASCADE,
-  FOREIGN KEY (categoria_id) REFERENCES categorias(id) ON DELETE CASCADE
+  id_pelicula INT,
+  id_categoria INT,
+  PRIMARY KEY (id_pelicula, id_categoria),
+  FOREIGN KEY (id_pelicula) REFERENCES peliculas(id_pelicula),
+  FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria)
 );
 
 -- Relacionar películas con categorías
-INSERT INTO pelicula_categoria (pelicula_id, categoria_id) VALUES
+INSERT INTO pelicula_categoria (id_pelicula, id_categoria) VALUES
 (1, 1),  -- Breaking Bad -> Drama
 (1, 4),  -- Breaking Bad -> Crimen
 (2, 4),  -- La Casa de Papel -> Crimen
@@ -100,58 +94,53 @@ INSERT INTO pelicula_categoria (pelicula_id, categoria_id) VALUES
 (4, 5),  -- Stranger Things -> Terror
 (5, 4);  -- Peaky Blinders -> Crimen
 
+-- Tabla de Roles
+CREATE TABLE roles (
+  id_rol INT AUTO_INCREMENT PRIMARY KEY,
+  nombre_rol VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- Insertar datos en la tabla de roles
+INSERT INTO roles (nombre_rol) VALUES
+('Admin'),
+('Suscriptor');
+
 -- Tabla de Usuarios
 CREATE TABLE usuarios (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100),
   email VARCHAR(100) UNIQUE NOT NULL,
-  password VARCHAR(255) NOT NULL, 
+  password VARCHAR(255) NOT NULL,
+  id_rol INT NOT NULL,
+  FOREIGN KEY (id_rol) REFERENCES roles(id_rol),
   fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Insertar datos en la tabla de usuarios
-INSERT INTO usuarios (nombre, email, password) VALUES
-('Kilian', 'kilian@gmail.com', '$2b$12$RhUYA1WMgaUpw3zQegXRYeAg3PpOaOhsLLCSmiUnvdAhNw5UHu/AK'),
-('Hugo', 'hugo@gmail.com', '$2b$12$9RzCMHtfRNhWx.5rtRdPOeISu74e7nRYu8nckS2.ujtHFosKe8xDK'),
-('Alberto', 'alberto@gmail.com', '$2b$12$LMQ1gj128E2uTL0fWP697./P/pJIJVxw3TLBjpncQSQBB8emRMJji');
-
--- Tabla de Roles
-CREATE TABLE roles (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  role_name VARCHAR(50) UNIQUE NOT NULL
-);
-
--- Insertar datos en la tabla de roles
-INSERT INTO roles (role_name) VALUES
-('Admin'),
-('Suscriptor');
-
--- Tabla de Relación entre Usuarios y Roles
-CREATE TABLE usuario_rol (
-  usuario_id INT,
-  rol_id INT,
-  PRIMARY KEY (usuario_id, rol_id),
-  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-  FOREIGN KEY (rol_id) REFERENCES roles(id) ON DELETE CASCADE
-);
-
--- Asignar roles a los usuarios
-INSERT INTO usuario_rol (usuario_id, rol_id) VALUES
-(1, 1),  -- Kilian -> Admin
-(2, 2),  -- Hugo -> Suscriptor
-(3, 2);  -- Alberto -> Suscriptor
+INSERT INTO usuarios (nombre, email, password, id_rol) VALUES
+('Kilian', 'kilian@gmail.com', '$2b$12$RhUYA1WMgaUpw3zQegXRYeAg3PpOaOhsLLCSmiUnvdAhNw5UHu/AK',1),
+('Hugo', 'hugo@gmail.com', '$2b$12$9RzCMHtfRNhWx.5rtRdPOeISu74e7nRYu8nckS2.ujtHFosKe8xDK',1),
+('Alberto', 'alberto@gmail.com', '$2b$12$LMQ1gj128E2uTL0fWP697./P/pJIJVxw3TLBjpncQSQBB8emRMJji',2);
 
 -- Tabla de Likes
 CREATE TABLE likes (
+  id_like_usuario INT NOT NULL AUTO_INCREMENT,
   usuario_id INT,
   pelicula_id INT,
-  PRIMARY KEY (usuario_id, pelicula_id),
-  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-  FOREIGN KEY (pelicula_id) REFERENCES peliculas(id) ON DELETE CASCADE
+  PRIMARY KEY (id_like_usuario),
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+  FOREIGN KEY (pelicula_id) REFERENCES peliculas(id_pelicula)
 );
 
 -- Insertar likes de los usuarios
 INSERT INTO likes (usuario_id, pelicula_id) VALUES
-(2, 1),  -- Kilian le da like a Breaking Bad
-(3, 2),  -- Hugo le da like a La Casa de Papel
-(1, 4);  -- Alberto le da like a Stranger Things
+(2, 1), -- Kilian le da like a Breaking Bad
+(3, 2), -- Hugo le da like a La Casa de Papel
+(3, 2), -- Hugo le da like a La Casa de Papel
+(3, 2), -- Hugo le da like a La Casa de Papel
+(3, 2), -- Hugo le da like a La Casa de Papel
+(3, 2), -- Hugo le da like a La Casa de Papel
+(3, 1), -- Hugo le da like a Breaking Bad
+(3, 1), -- Hugo le da like a Breaking Bad
+(3, 4), -- Hugo le da like a Stranger Things
+(1, 4); -- Alberto le da like a Stranger Things

@@ -11,6 +11,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <title>Netflix</title>
 </head>
 <body>
@@ -21,7 +22,18 @@
         <input class="form-control" type="search" placeholder="Buscar..." aria-label="Search" id="searchQuery">
         <button class="btn btn-outline-success" type="submit">Buscar</button>
       </form>      
-      <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginModal">Login/Register</button>
+      <?php if(isset($_SESSION['username'])): ?>
+        <div class="dropdown">
+          <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user"></i> <?php echo $_SESSION['username']; ?>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li><a class="dropdown-item" href="./proc/logout.php">Cerrar sesión</a></li>
+          </ul>
+        </div>
+      <?php else: ?>
+        <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginModal">Login/Register</button>
+      <?php endif; ?>
     </div>
   </nav>
 
