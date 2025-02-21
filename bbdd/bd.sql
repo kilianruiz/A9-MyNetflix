@@ -136,11 +136,6 @@ CREATE TABLE likes (
 INSERT INTO likes (usuario_id, pelicula_id) VALUES
 (2, 1), -- Kilian le da like a Breaking Bad
 (3, 2), -- Hugo le da like a La Casa de Papel
-(3, 2), -- Hugo le da like a La Casa de Papel
-(3, 2), -- Hugo le da like a La Casa de Papel
-(3, 2), -- Hugo le da like a La Casa de Papel
-(3, 2), -- Hugo le da like a La Casa de Papel
-(3, 1), -- Hugo le da like a Breaking Bad
 (3, 1), -- Hugo le da like a Breaking Bad
 (3, 4), -- Hugo le da like a Stranger Things
 (1, 4); -- Alberto le da like a Stranger Things
