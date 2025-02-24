@@ -265,21 +265,28 @@ body {
 
 /* Estilo para el botón de like */
 .like-btn {
-  background-color: transparent;
+  background: none;
   border: none;
-  color: white;
-  font-size: 16px;
   cursor: pointer;
+  padding: 5px 10px;
   display: flex;
   align-items: center;
+  gap: 5px;
+  color: #fff;
 }
 
 .like-btn i {
-  margin-right: 5px;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
 }
 
-.like-btn.liked {
-  color: red; /* Cambia el color cuando se da like */
+.like-btn.liked i {
+  color: #dc3545;
+  transform: scale(1.1);
+}
+
+.likes-count {
+  font-size: 0.9rem;
 }
 
 .likes-container {

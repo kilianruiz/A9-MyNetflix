@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE nombre = :nombre");
-        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
         $stmt->execute();
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
