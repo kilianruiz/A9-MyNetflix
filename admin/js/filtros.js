@@ -60,20 +60,43 @@ $(document).ready(function() {
         actualizarTabla();
     });
 
-    function aplicarFiltros() {
-        $.ajax({
-            url: 'proc/filtrar_peliculas.php',
+    function aplicarFiltros(pagina = 1) {
+        const titulo = $('#filtroTitulo').val();
+        const autor = $('#filtroAutor').val();
+        const fecha = $('#filtroFecha').val();
+        const categoria = $('#filtroCategoria').val();
+        const ordenLikes = $('#ordenLikes').data('orden');
+        const registros = $('#registros').val();
+
+        const formData = new FormData();
+        formData.append('titulo', titulo);
+        formData.append('autor', autor);
+        formData.append('fecha', fecha);
+        formData.append('categoria', categoria);
+        formData.append('ordenLikes', ordenLikes);
+        formData.append('registros', registros);
+        formData.append('pagina', pagina);
+
+        fetch('proc/filtrar_peliculas.php', {
             method: 'POST',
-            data: {
-                titulo: $('#filtroTitulo').val(),
-                autor: $('#filtroAutor').val(),
-                fecha: $('#filtroFecha').val(),
-                categoria: $('#filtroCategoria').val(),
-                ordenLikes: $('#ordenLikes').data('orden')
-            },
-            success: function(response) {
-                $('#tablaPeliculas').html(response);
-            }
+            body: formData
+        })
+        .then(response => response.text())
+        .then(html => {
+            $('#tablaPeliculas').html(html);
+            configurarBotonesAcciones();
+            configurarPaginacionFiltrada();
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function configurarPaginacionFiltrada() {
+        $('.pagination a').each(function() {
+            $(this).on('click', function(e) {
+                e.preventDefault();
+                const pagina = $(this).data('pagina');
+                aplicarFiltros(pagina);
+            });
         });
     }
 
@@ -86,5 +109,10 @@ $(document).ready(function() {
         $('#filtroCategoria').val('');
         $('#ordenLikes').data('orden', 'none').find('i').removeClass('fa-sort-up fa-sort-down').addClass('fa-sort');
         aplicarFiltros();
+    });
+
+    // Event listener para el selector de registros por página
+    $('#registros').on('change', function() {
+        aplicarFiltros(1);
     });
 }); 
