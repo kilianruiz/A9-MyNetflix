@@ -139,3 +139,9 @@ INSERT INTO likes (usuario_id, pelicula_id) VALUES
 (3, 1), -- Hugo le da like a Breaking Bad
 (3, 4), -- Hugo le da like a Stranger Things
 (1, 4); -- Alberto le da like a Stranger Things
+
+-- Tabla para solicitudes de registro pendientes
+CREATE TABLE registro_pendiente (
+  id_solicitud INT AUTO_INCREMENT PRIMARY KEY,
+  id_usuario_solicitante INT NOT NULL
+);
