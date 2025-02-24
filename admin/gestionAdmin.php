@@ -64,6 +64,51 @@ $peliculas = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <span>registros por página</span>
         </div>
 
+        <div class="filtros-container">
+            <div class="filtro-grupo">
+                <i class="fas fa-film"></i>
+                <input type="text" class="filtro-input" id="filtroTitulo" placeholder="Buscar por título de película...">
+            </div>
+            
+            <div class="filtro-grupo">
+                <i class="fas fa-user"></i>
+                <input type="text" class="filtro-input" id="filtroAutor" placeholder="Buscar por nombre del director...">
+            </div>
+            
+            <div class="filtro-grupo">
+                <i class="fas fa-calendar"></i>
+                <input type="date" class="filtro-input" id="filtroFecha" placeholder="Seleccionar fecha de lanzamiento">
+            </div>
+            
+            <div class="filtro-grupo">
+                <i class="fas fa-tags"></i>
+                <select class="filtro-input" id="filtroCategoria">
+                    <option value="">Seleccionar categoría...</option>
+                    <?php
+                    $query = "SELECT * FROM categorias ORDER BY nombre_categoria";
+                    $categorias = $pdo->query($query)->fetchAll();
+                    foreach ($categorias as $categoria) {
+                        echo "<option value='" . $categoria['id_categoria'] . "'>" . htmlspecialchars($categoria['nombre_categoria']) . "</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+            
+            <div class="filtro-grupo">
+                <i class="fas fa-heart"></i>
+                <button class="orden-likes" id="ordenLikes" data-orden="none" title="Ordenar por likes">
+                    <i class="fas fa-sort"></i>
+                </button>
+            </div>
+
+            <div class="filtro-grupo">
+                <i class="fas fa-broom"></i>
+                <button class="limpiar-filtros" id="limpiarFiltros" title="Limpiar todos los filtros">
+                    <i class="fas fa-broom"></i>
+                </button>
+            </div>
+        </div>
+
         <a href="#" class="btn-nuevo" id="btnNuevaPelicula">Nueva Película</a>
         
         <div id="tablaPeliculas">
@@ -89,5 +134,6 @@ $peliculas = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/admin.js"></script>
+    <script src="js/filtros.js"></script>
 </body>
 </html>
