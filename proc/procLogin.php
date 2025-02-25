@@ -3,46 +3,47 @@ session_start();
 
 require_once '../bbdd/db.php'; 
 
+header('Content-Type: application/json');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Obtén los datos del formulario
-    $nombre = $_POST['username'] ?? ''; 
-    $password = $_POST['password'] ?? ''; 
+    $nombre = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
 
     if (empty($nombre) || empty($password)) {
-        echo 'Por favor ingresa tu nombre de usuario y contraseña.';
+        echo json_encode(['success' => false, 'message' => 'Por favor ingresa tu nombre de usuario y contraseña.']);
         exit;
     }
 
     try {
-        $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE nombre = :nombre");
-        $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
-        $stmt->execute();
-
+        // Buscar por nombre o email
+        $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE nombre = :nombre OR email = :email");
+        $stmt->execute([
+            ':nombre' => $nombre,
+            ':email' => $nombre
+        ]);
+        
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($user) {
-
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['nombre'];
-
-                // Verificar el rol directamente de la tabla usuarios
-                if ($user['id_rol'] == 1) {
-                    header("Location: ../admin/gestionAdmin.php");
-                } else {
-                    header("Location: ../index.php");
-                }
-                exit;
+        
+        if ($user && password_verify($password, $user['password'])) {
+            // Guardar datos importantes en la sesión
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['nombre'];
+            $_SESSION['rol'] = $user['id_rol'];
+            $_SESSION['email'] = $user['email'];
+            
+            if ($user['id_rol'] == 1) {
+                header('Location: ../admin/gestionAdmin.php');
             } else {
-
-                echo 'Contraseña incorrecta.';
+                header('Location: ../index.php');
             }
         } else {
-
-            echo 'Usuario no encontrado.';
+            echo json_encode(['success' => false, 'message' => 'Usuario o contraseña incorrectos']);
         }
     } catch (PDOException $e) {
-
-        echo 'Error de conexión: ' . $e->getMessage();
+        error_log("Error en login: " . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => 'Error de conexión']);
     }
+} else {
+    echo json_encode(['success' => false, 'message' => 'Método no permitido']);
 }
 ?>

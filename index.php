@@ -14,7 +14,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <title>Netflix</title>
 </head>
-<body>
+<body data-user-logged="<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>" 
+      data-username="<?php echo isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : ''; ?>">
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
       <img src="./img/logo-grande.png" alt="" class="navbar-logo">

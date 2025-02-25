@@ -1,6 +1,5 @@
 <?php
-session_start();
-require_once "../bbdd/db.php";
+require_once '../bbdd/db.php';
 
 // Verificar si el usuario está logueado como admin
 // if (!isset($_SESSION['user_id']) || $_SESSION['username'] != 'admin') {
@@ -110,6 +109,7 @@ $peliculas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <a href="#" class="btn-nuevo" id="btnNuevaPelicula">Nueva Película</a>
+        <a href="./gestion_solicitudes.php" class="" id="">Usuarios</a>
         
         <div id="tablaPeliculas">
             <!-- La tabla se cargará aquí dinámicamente -->

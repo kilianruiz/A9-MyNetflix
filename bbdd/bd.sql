@@ -140,8 +140,12 @@ INSERT INTO likes (usuario_id, pelicula_id) VALUES
 (3, 4), -- Hugo le da like a Stranger Things
 (1, 4); -- Alberto le da like a Stranger Things
 
--- Tabla para solicitudes de registro pendientes
+-- Actualizar la tabla de registro_pendiente
 CREATE TABLE registro_pendiente (
-  id_solicitud INT AUTO_INCREMENT PRIMARY KEY,
-  id_usuario_solicitante INT NOT NULL
+    id_solicitud INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+    estado ENUM('pendiente', 'aceptado', 'rechazado') DEFAULT 'pendiente'
 );
