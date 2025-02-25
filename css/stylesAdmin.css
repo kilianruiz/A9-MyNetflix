@@ -704,3 +704,148 @@ textarea.form-control {
     75% { transform: rotate(15deg) scale(1.2); }
     100% { transform: rotate(0deg) scale(1.2); }
 }
+
+/* Estilos para la sección de usuarios */
+.table-responsive {
+    margin-top: 20px;
+    border: 2px solid #e50914;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Botones de acción en la tabla de usuarios */
+.btn-sm {
+    padding: 5px 10px;
+    margin: 0 3px;
+    background-color: transparent;
+    border: 2px solid #e50914;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.btn-sm:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+}
+
+.btn-sm i {
+    color: #fff;
+}
+
+/* Modal de usuarios */
+.modal-content {
+    background-color: #141414;
+    border: 2px solid #e50914;
+}
+
+.modal-header {
+    border-bottom: 1px solid #e50914;
+    padding: 1rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #e50914;
+    padding: 1rem;
+}
+
+.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Botón nuevo usuario */
+.btn-success {
+    background-color: transparent;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    border: 2px solid #e50914;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.btn-success:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+/* Secciones */
+h2 {
+    color: #fff;
+    margin: 30px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid;
+    border-image: linear-gradient(to right, #e50914, transparent) 1;
+}
+
+/* Enlaces de navegación */
+.nav-link {
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 2px solid #e50914;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    margin: 0 10px;
+}
+
+.nav-link:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+}
+
+/* Tabla de solicitudes pendientes */
+.table-dark {
+    background-color: #141414;
+    color: #fff;
+}
+
+.table-dark th {
+    background-color: rgba(229, 9, 20, 0.1);
+    border-bottom: 2px solid #e50914;
+}
+
+.table-dark td {
+    border: none;
+}
+
+.table-dark tr:hover {
+    background-color: rgba(229, 9, 20, 0.1);
+}
+
+/* Botones de gestión de solicitudes */
+.btn-primary, .btn-danger {
+    background-color: transparent;
+    border: 2px solid #e50914;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover, .btn-danger:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+}
+
+/* Navegación entre secciones */
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.nav-buttons a {
+    background-color: transparent;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 2px solid #e50914;
+    transition: all 0.3s ease;
+}
+
+.nav-buttons a:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+}
