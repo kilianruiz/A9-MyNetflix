@@ -99,6 +99,10 @@
     <div class="top-container" id="top-container">
       <!-- Las películas se cargarán aquí dinámicamente -->
     </div>
+    <h4>Peliculas recientemente añadidas</h4>
+    <div id="other-container" class="movies-container">
+    <!-- Aquí se mostrarán las demás películas -->
+    </div>
   </div>
 
   <script src="js/script.js"></script> 
