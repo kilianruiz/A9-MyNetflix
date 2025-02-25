@@ -100,7 +100,7 @@
       <!-- Las películas se cargarán aquí dinámicamente -->
     </div>
     <h4>Peliculas recientemente añadidas</h4>
-    <div id="other-container" class="movies-container">
+    <div class="otras_pelis" id="other-container">
     <!-- Aquí se mostrarán las demás películas -->
     </div>
   </div>

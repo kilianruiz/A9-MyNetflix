@@ -32,7 +32,7 @@ try {
         FROM peliculas p
         LEFT JOIN likes l ON p.id_pelicula = l.pelicula_id
         GROUP BY p.id_pelicula
-        ORDER BY likes DESC
+        ORDER BY fecha_lanzamiento DESC
     ";
 
     $stmt = $pdo->prepare($otherMoviesQuery);

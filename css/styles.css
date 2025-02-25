@@ -292,3 +292,23 @@ body {
 .likes-container {
   margin-top: 10px;
 }
+
+/* Mantener los estilos existentes y ajustar otras_pelis */
+.otras_pelis {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr); /* 8 columnas */
+}
+
+.otras_pelis .top-item {
+  position: relative;
+  flex: 0 0 auto;
+  width: 150px; /* Mismo ancho que los posters originales */
+}
+
+.otras_pelis .movie-poster {
+  width: 150px; /* Mismo ancho que los posters originales */
+  height: 225px; /* Misma altura que los posters originales */
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
