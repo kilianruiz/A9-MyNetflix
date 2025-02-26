@@ -17,15 +17,30 @@ try {
             IF(:user_id IS NOT NULL, COUNT(DISTINCT CASE WHEN l.usuario_id = :user_id THEN l.id_like_usuario END), 0) as user_liked
         FROM peliculas p
         LEFT JOIN likes l ON p.id_pelicula = l.pelicula_id
+        LEFT JOIN pelicula_categoria pc ON p.id_pelicula = pc.id_pelicula
     ";
 
     // Agregar condiciones según los filtros
     $whereConditions = [];
+    $params = [':user_id' => $userId];
+
     if (!empty($filters['liked']) && $userId) {
         $whereConditions[] = "EXISTS (SELECT 1 FROM likes WHERE pelicula_id = p.id_pelicula AND usuario_id = :user_id)";
     }
     if (!empty($filters['notLiked']) && $userId) {
         $whereConditions[] = "NOT EXISTS (SELECT 1 FROM likes WHERE pelicula_id = p.id_pelicula AND usuario_id = :user_id)";
+    }
+    if (!empty($filters['category'])) {
+        $whereConditions[] = "pc.id_categoria = :category_id";
+        $params[':category_id'] = $filters['category'];
+    }
+    if (!empty($filters['categories'])) {
+        $categories = $filters['categories'];
+        $placeholders = str_repeat('?,', count($categories) - 1) . '?';
+        $whereConditions[] = "pc.id_categoria IN ($placeholders)";
+        foreach ($categories as $index => $categoryId) {
+            $params[] = $categoryId;
+        }
     }
 
     if (!empty($whereConditions)) {

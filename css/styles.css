@@ -459,3 +459,57 @@ body {
     max-width: 800px;
     margin: 0 20px;
 }
+
+/* Estilos para el dropdown de categorías */
+.dropdown-menu {
+    background-color: #212529;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.dropdown-item {
+    color: #fff;
+}
+
+.dropdown-item:hover {
+    background-color: #343a40;
+    color: #fff;
+}
+
+.dropdown-divider {
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Estilo activo para el botón de categoría */
+.btn-outline-primary.show {
+    background-color: red;
+    color: white;
+    border-color: red;
+}
+
+/* Estilos para el menú de categorías */
+.category-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+}
+
+.category-item:hover {
+    background-color: #343a40;
+}
+
+.category-item input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.category-item label {
+    margin-bottom: 0;
+    cursor: pointer;
+    color: #fff;
+}
+
+/* Estilo para el botón de categorías cuando hay selecciones */
+#categoryDropdown.has-selections {
+    background-color: red;
+    color: white;
+    border-color: red;
+}

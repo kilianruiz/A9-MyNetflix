@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadMovies();
+    loadCategories();
 });
 
 function loadMovies(filters = {}) {
@@ -282,4 +283,94 @@ document.addEventListener('DOMContentLoaded', function() {
         // Recargar las películas
         loadMovies();
     });
+});
+
+function loadCategories() {
+    fetch('./php/categories.php')
+        .then(response => response.json())
+        .then(categories => {
+            const categoryList = document.getElementById('categoryList');
+            categoryList.innerHTML = `
+                <li><a class="dropdown-item" href="#" data-category-id="">Todas las categorías</a></li>
+                <li><hr class="dropdown-divider"></li>
+            `;
+            
+            categories.forEach(category => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <a class="dropdown-item category-item" href="#" data-category-id="${category.id_categoria}">
+                        <input type="checkbox" class="form-check-input me-2" id="cat-${category.id_categoria}">
+                        <label for="cat-${category.id_categoria}">${category.nombre_categoria}</label>
+                    </a>`;
+                categoryList.appendChild(li);
+            });
+
+            // Event listener para los checkboxes de categorías
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const checkbox = item.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    
+                    // Actualizar el texto del botón
+                    updateCategoryButtonText();
+                    
+                    // Cargar películas con los filtros actuales
+                    loadMovies(getActiveFilters());
+                });
+            });
+        })
+        .catch(error => console.error('Error cargando categorías:', error));
+}
+
+function updateCategoryButtonText() {
+    const selectedCategories = getSelectedCategories();
+    const categoryButton = document.getElementById('categoryDropdown');
+    
+    if (selectedCategories.length === 0) {
+        categoryButton.innerHTML = '<i class="fas fa-tags"></i>';
+    } else {
+        categoryButton.innerHTML = `<i class="fas fa-tags"></i> (${selectedCategories.length})`;
+    }
+}
+
+function getSelectedCategories() {
+    return Array.from(document.querySelectorAll('.category-item input[type="checkbox"]:checked'))
+        .map(checkbox => checkbox.closest('.category-item').dataset.categoryId);
+}
+
+function getActiveFilters() {
+    const activeFilters = {};
+    
+    // Obtener categorías seleccionadas
+    const selectedCategories = getSelectedCategories();
+    if (selectedCategories.length > 0) {
+        activeFilters.categories = selectedCategories;
+    }
+    
+    // Añadir otros filtros activos
+    document.querySelectorAll('.filter-btn.active').forEach(btn => {
+        activeFilters[btn.dataset.filter] = true;
+    });
+    
+    return activeFilters;
+}
+
+// Modificar el event listener para limpiar filtros
+document.getElementById('clearFilters').addEventListener('click', function() {
+    // Limpiar checkboxes de categorías
+    document.querySelectorAll('.category-item input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    
+    // Limpiar otros filtros
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Actualizar texto del botón de categorías
+    updateCategoryButtonText();
+    
+    // Recargar películas sin filtros
+    loadMovies({});
 });
