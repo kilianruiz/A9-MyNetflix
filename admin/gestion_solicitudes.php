@@ -105,13 +105,12 @@
         
     </div>
 
-    <!-- Modal para Nueva/Editar Película -->
-
+    <!-- Modal para Crear/Editar Usuario -->
     <div class="modal fade" id="userModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content bg-dark text-white">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="userModalTitle">Nuevo Usuario</h5>
+                    <h5 class="modal-title">Nuevo Usuario</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -127,8 +126,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="password" name="password">
-                            <small class="text-muted">Dejar en blanco para mantener la contraseña actual al editar</small>
+                            <input type="password" class="form-control" id="password" name="password" required>
                         </div>
                         <div class="mb-3">
                             <label for="rol" class="form-label">Rol</label>
@@ -141,73 +139,11 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="saveUser()">Guardar</button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarUsuario">Guardar</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-    function gestionarSolicitud(id, accion) {
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: `¿Deseas ${accion} esta solicitud?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, confirmar',
-            cancelButtonText: 'Cancelar',
-            background: '#212529',
-            color: '#fff'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch('../proc/gestionarSolicitud.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        id: id,
-                        accion: accion
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            title: '¡Completado!',
-                            text: data.message,
-                            icon: 'success',
-                            background: '#212529',
-                            color: '#fff'
-                        }).then(() => {
-                            location.reload();
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Error',
-                            text: data.message || 'Error al procesar la solicitud',
-                            icon: 'error',
-                            background: '#212529',
-                            color: '#fff'
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Error al procesar la solicitud',
-                        icon: 'error',
-                        background: '#212529',
-                        color: '#fff'
-                    });
-                });
-            }
-        });
-    }
-    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/usuarios.js"></script>
