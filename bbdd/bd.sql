@@ -253,7 +253,26 @@ INSERT INTO pelicula_categoria (id_pelicula, id_categoria) VALUES
 (3, 2),  -- Fast & Furious 8 -> Acción
 (4, 3),  -- Stranger Things -> Ciencia Ficción
 (4, 5),  -- Stranger Things -> Terror
-(5, 4);  -- Peaky Blinders -> Crimen
+(5, 4),  -- Prison Break -> Crimen
+(6, 1),  -- The Shawshank Redemption -> Drama
+(7, 1),  -- The Godfather -> Drama
+(8, 4),  -- Pulp Fiction -> Crimen
+(9, 3),  -- Inception -> Ciencia Ficción
+(10, 2),  -- Interstellar -> Acción
+(10, 3), -- Interstellar -> Ciencia Ficción
+(11, 2),  -- Blade Runner 2049 -> Acción
+(12, 2),  -- The Dark Knight -> Acción
+(13, 2),  -- Avengers: Endgame -> Acción
+(14, 2),  -- Spider-Man: No Way Home -> Acción
+(15, 1),  -- Toy Story -> Drama
+(16, 1),  -- Frozen -> Drama
+(17, 3),  -- Spirited Away -> Ciencia Ficción
+(18, 4),  -- Goodfellas -> Crimen
+(19, 1),  -- Monty Python and the Holy Grail -> Drama
+(20, 1),  -- Superbad -> Drama
+(21, 5),  -- The Conjuring -> Terror
+(22, 5),  -- Hereditary -> Terror
+(23, 5);  -- It -> Terror
 
 -- Tabla de Roles
 CREATE TABLE roles (
