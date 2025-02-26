@@ -19,10 +19,25 @@
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
       <img src="./img/logo-grande.png" alt="" class="navbar-logo">
-      <form class="d-flex flex-grow-1" role="search" id="searchForm">
+      <form class="d-flex" role="search" id="searchForm">
         <input class="form-control" type="search" placeholder="Buscar..." aria-label="Search" id="searchQuery">
-        <button class="btn btn-outline-success" type="submit">Buscar</button>
-      </form>      
+      </form>
+      
+      <!-- Mover los filtros aquí -->
+      <div class="filter-container">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-outline-primary filter-btn" data-filter="liked">
+            <i class="fas fa-heart"></i> Mis likes
+          </button>
+          <button class="btn btn-outline-primary filter-btn" data-filter="not-liked">
+            <i class="far fa-heart"></i> Sin like
+          </button>
+          <button class="btn btn-outline-danger" id="clearFilters">
+            <i class="fas fa-trash"></i> 
+          </button>
+        </div>
+      </div>
+      
       <?php if(isset($_SESSION['username'])): ?>
         <div class="dropdown">
           <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">

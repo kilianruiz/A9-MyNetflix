@@ -2,30 +2,36 @@ document.addEventListener('DOMContentLoaded', () => {
     loadMovies();
 });
 
-function loadMovies() {
-    fetch('./php/movies.php')
-        .then(response => response.json())
-        .then(data => {
-            const topContainer = document.getElementById('top-container');
-            const otherContainer = document.getElementById('other-container');
+function loadMovies(filters = {}) {
+    fetch('./php/movies.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(filters)
+    })
+    .then(response => response.json())
+    .then(data => {
+        const topContainer = document.getElementById('top-container');
+        const otherContainer = document.getElementById('other-container');
 
-            // Limpiar contenedores
-            topContainer.innerHTML = '';
-            otherContainer.innerHTML = '';
+        // Limpiar contenedores
+        topContainer.innerHTML = '';
+        otherContainer.innerHTML = '';
 
-            // Mostrar las 5 películas con más likes (con número)
-            data.topMovies.forEach((movie, index) => {
-                const movieItem = createMovieElement(movie, index + 1, true); // Agregar número
-                topContainer.appendChild(movieItem);
-            });
+        // Mostrar las 5 películas con más likes (con número)
+        data.topMovies.forEach((movie, index) => {
+            const movieItem = createMovieElement(movie, index + 1, true);
+            topContainer.appendChild(movieItem);
+        });
 
-            // Mostrar el resto de las películas (sin número)
-            data.otherMovies.forEach((movie, index) => {
-                const movieItem = createMovieElement(movie, index + 1, false); // No agregar número
-                otherContainer.appendChild(movieItem);
-            });
-        })
-        .catch(error => console.error('Error al cargar las películas:', error));
+        // Mostrar el resto de las películas (sin número)
+        data.otherMovies.forEach((movie, index) => {
+            const movieItem = createMovieElement(movie, index + 1, false);
+            otherContainer.appendChild(movieItem);
+        });
+    })
+    .catch(error => console.error('Error al cargar las películas:', error));
 }
 
 function createMovieElement(movie, index, showNumber = true) {
@@ -187,17 +193,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchQuery');
     const topContainer = document.getElementById('top-container');
 
-    // Prevent form submission
-    searchForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-    });
-
-    // Add input event listener for real-time search
+    // Eliminar el código que agrega los filtros al DOM ya que ahora están en la navbar
     searchInput.addEventListener('input', function() {
         const searchQuery = this.value;
         
         if (!searchQuery.trim()) {
-            // Si la búsqueda está vacía, volver a cargar las películas normalmente
             loadMovies();
             return;
         }
@@ -240,5 +240,46 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error:', error);
                 topContainer.innerHTML = '<p>Error al buscar películas</p>';
             });
+    });
+
+    // Estado de los filtros
+    let activeFilters = new Set();
+
+    // Event listeners para los botones de filtro
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            
+            if (activeFilters.has(filter)) {
+                activeFilters.delete(filter);
+                this.classList.remove('active');
+            } else {
+                activeFilters.add(filter);
+                this.classList.add('active');
+            }
+
+            // Construir objeto de filtros
+            const filters = {
+                liked: activeFilters.has('liked'),
+                notLiked: activeFilters.has('not-liked')
+            };
+
+            loadMovies(filters);
+        });
+    });
+
+    // Event listener para el botón de limpiar filtros
+    document.getElementById('clearFilters').addEventListener('click', function() {
+        // Limpiar los filtros activos
+        activeFilters.clear();
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Limpiar el campo de búsqueda
+        document.getElementById('searchQuery').value = '';
+        
+        // Recargar las películas
+        loadMovies();
     });
 });
