@@ -196,6 +196,12 @@ document.addEventListener('DOMContentLoaded', function() {
     searchInput.addEventListener('input', function() {
         const searchQuery = this.value;
         
+        if (!searchQuery.trim()) {
+            // Si la búsqueda está vacía, volver a cargar las películas normalmente
+            loadMovies();
+            return;
+        }
+
         fetch(`proc/search.php?query=${encodeURIComponent(searchQuery)}`)
             .then(response => response.json())
             .then(data => {
@@ -203,14 +209,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 topContainer.innerHTML = '';
                 
                 // Create movie cards for each result
-                data.forEach(movie => {
-                    const movieCard = document.createElement('div');
-                    movieCard.className = 'movie-card';
-                    movieCard.innerHTML = `
-                        <img src="${movie.poster}" alt="${movie.title}">
-                        <h3>${movie.title}</h3>
-                    `;
-                    topContainer.appendChild(movieCard);
+                data.forEach((movie, index) => {
+                    const movieItem = document.createElement('div');
+                    movieItem.classList.add('top-item');
+
+                    // Agregar el número solo para los primeros 5 resultados
+                    if (index < 5) {
+                        const movieNumber = document.createElement('div');
+                        movieNumber.classList.add('top-number');
+                        movieNumber.textContent = index + 1;
+                        movieItem.appendChild(movieNumber);
+                    }
+
+                    const movieImg = document.createElement('img');
+                    movieImg.src = movie.poster;
+                    movieImg.alt = movie.title;
+                    movieImg.classList.add('movie-poster');
+                    movieImg.addEventListener('click', () => showMovieModal(movie));
+                    movieItem.appendChild(movieImg);
+
+                    topContainer.appendChild(movieItem);
                 });
                 
                 // If no results found
