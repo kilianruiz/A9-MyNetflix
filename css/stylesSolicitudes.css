@@ -1,0 +1,851 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #141414;
+    color: #ffffff;
+    padding: 20px;
+    padding-top: 100px; /* Añadir espacio para la navbar fija */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.btn-nuevo {
+    background-color: transparent;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: inline-block;
+    border: 2px solid #e50914;
+    transition: all 0.3s ease;
+    position: relative; /* Añadido para posicionar el icono */
+}
+
+.btn-nuevo:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+    color: transparent; /* Oculta el texto */
+}
+
+.btn-nuevo:hover::after {
+    content: '\f067'; /* Código del icono "plus" de Font Awesome */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #000000;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    border: none;
+    border: 2px solid #e50914;
+    border-radius: 4px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    color: #ffffff;
+}
+
+th {
+    background-color: black;
+    color: white;
+    border-bottom: 2px solid #e50914;
+}
+
+tr:hover {
+    background-color: #2f2f2f;
+}
+
+.movie-image {
+    width: 100px;
+    height: auto;
+    border-radius: 4px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    padding-bottom: 10px;  /* Añadido padding para separar la línea */
+    border-bottom: 2px solid;
+    border-image: linear-gradient(to right, transparent, #e50914, transparent) 1;
+}
+
+.btn-editar, .btn-eliminar {
+    color: #ffffff;
+    border: 2px solid #e50914;
+    background-color: transparent;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 0.9rem;
+    min-width: 80px;
+    text-align: center;
+    position: relative; /* Añadido para posicionamiento del icono */
+}
+
+.btn-editar:hover {
+    background-color: #e50914;
+    border-color: #e50914;
+    color: transparent;
+    transform: translateY(-2px);
+}
+
+.btn-editar:hover::after {
+    content: '\f044';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    color: #ffffff;
+    border: none;
+}
+
+.btn-eliminar:hover {
+    background-color: #e50914;
+    border-color: #e50914;
+    color: transparent;
+    transform: translateY(-2px);
+}
+
+.btn-eliminar:hover::after {
+    content: '\f1f8';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    color: #ffffff;
+    border: none;
+}
+
+.description-cell {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.pagination a {
+    padding: 8px 16px;
+    text-decoration: none;
+    background-color: #1f1f1f;
+    color: white;
+    border: 1px solid #e50914;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.pagination a:hover {
+    background-color: #e50914;
+    transform: translateY(-4px);
+}
+
+.pagination .active {
+    background-color: #e50914;
+    border-color: #e50914;
+    transform: translateY(-2px);
+}
+
+.pagination .disabled {
+    background-color: #666;
+    cursor: not-allowed;
+    border-color: #666;
+}
+
+.navbar {
+    background-color: rgba(40,40,40,255);
+    padding: 1rem;
+    box-shadow: 0 2px 10px rgba(229, 9, 20, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 30px;
+    margin-top: 0;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.navbar-logo {
+    height: 40px;
+    margin-right: 20px;
+}
+
+.registros-selector {
+    margin: 20px 0;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.registros-selector select {
+    background-color: #1f1f1f;
+    color: #ffffff;
+    border: 1px solid #333;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.registros-selector select:hover {
+    border-color: #e50914;
+}
+
+.registros-selector select:focus {
+    outline: none;
+    border-color: #e50914;
+    box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.2);
+}
+
+/* Modificación del botón del usuario */
+.btn-outline-light {
+    border-color: #e50914 !important;
+    color: #e50914 !important;
+}
+
+.btn-outline-light:hover {
+    background-color: #e50914 !important;
+    color: #ffffff !important;
+}
+
+/* Estilos específicos para el formulario de editar película */
+.form-control {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    color: #ffffff;
+    padding: 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #e50914;
+    box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.2);
+    outline: none;
+}
+
+.form-label {
+    color: #ffffff;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.form-check-label {
+    color: #ffffff;
+    margin-left: 8px;
+}
+
+.form-check-input {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+}
+
+.form-check-input:checked {
+    background-color: #e50914;
+    border-color: #e50914;
+}
+
+.form-check {
+    margin-bottom: 8px;
+}
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Estilo para la imagen del poster en el formulario */
+.form-control[type="file"] {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.form-control[type="file"]::-webkit-file-upload-button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-control[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #e50914;
+}
+
+/* Estilos específicos para editar_pelicula.php */
+.editar-pelicula-container .mb-3 {
+    border: 2px solid #e50914;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.editar-pelicula-container textarea.form-control {
+    min-height: 150px;
+    background-color: #2f2f2f;
+    border: 1px solid #333;
+    padding: 15px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+/* Estilos para el textarea de descripción cuando está activo */
+.editar-pelicula-container textarea.form-control:focus {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #e50914;
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.2);
+}
+
+/* Estilos para el botón volver con icono */
+.btn-volver {
+    background-color: transparent;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    border: 2px solid #e50914;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.btn-volver:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+    color: transparent; /* Oculta el texto al hacer hover */
+}
+
+.btn-volver:hover::after {
+    content: '\f2f5'; /* Código del icono "sign-out-alt" de Font Awesome */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+
+/* Estilos para el botón guardar con icono */
+.editar-pelicula-container .btn-nuevo {
+    background-color: transparent;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    border: 2px solid #e50914;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.editar-pelicula-container .btn-nuevo:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+    color: transparent; /* Oculta el texto al hacer hover */
+}
+
+.editar-pelicula-container .btn-nuevo:hover::after {
+    content: '\f0c7'; /* Código del icono "save" de Font Awesome */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+
+/* Estilos para mensajes de error */
+#mensajesError {
+    display: none;
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 4px;
+    background-color: rgba(229, 9, 20, 0.1);
+    border: 2px solid #e50914;
+    color: white;
+}
+
+#mensajesError:not(:empty) {
+    display: block !important;
+}
+
+/* Estilos para mensajes de error individuales */
+.error-mensaje {
+    color: #e50914;
+    font-size: 0.875rem;
+    margin-top: 5px;
+    padding: 5px 10px;
+    background-color: rgba(229, 9, 20, 0.1);
+    border-radius: 4px;
+    border-left: 3px solid #e50914;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Resaltar input con error */
+.form-control:has(+ .error-mensaje) {
+    border-color: #e50914;
+    box-shadow: 0 0 0 1px #e50914;
+}
+
+/* Estilos para inputs inválidos */
+.form-control.is-invalid {
+    border-color: #e50914 !important;
+    box-shadow: 0 0 0 1px #e50914 !important;
+}
+
+/* Estilos para los filtros */
+.filtros-container {
+    background-color: rgba(40,40,40,0.9);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #e50914;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.filtro-grupo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 200px;
+}
+
+/* Colocar los últimos dos elementos en la segunda fila y centrados */
+.filtro-grupo:nth-last-child(2),
+.filtro-grupo:last-child {
+    grid-column: span 1;
+    justify-self: center;
+}
+
+/* Centrar los últimos dos elementos */
+.filtro-grupo:nth-last-child(2) {
+    grid-column: 2;
+}
+
+.filtro-grupo:last-child {
+    grid-column: 3;
+}
+
+.filtro-input {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    flex: 1;
+    min-width: 0;
+    transition: all 0.3s ease;
+}
+
+.filtro-input:focus {
+    border-color: #e50914;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.2);
+}
+
+.filtro-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+.filtro-icon {
+    color: #e50914;
+    font-size: 1.1rem;
+}
+
+.orden-likes {
+    background: transparent;
+    border: none;
+    color: #e50914;
+    cursor: pointer;
+    padding: 5px;
+    transition: all 0.3s ease;
+}
+
+.orden-likes:hover {
+    transform: scale(1.2);
+}
+
+.orden-likes.activo {
+    color: #ffffff;
+}
+
+/* Animación para los iconos de ordenamiento */
+@keyframes rotateIcon {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.orden-likes i {
+    transition: transform 0.3s ease;
+}
+
+.orden-likes:hover i {
+    animation: rotateIcon 0.5s ease;
+}
+
+.limpiar-filtros {
+    background: transparent;
+    border: none;
+    color: #e50914;
+    cursor: pointer;
+    padding: 5px;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+}
+
+.limpiar-filtros:hover {
+    transform: scale(1.2);
+    animation: sweep 0.5s ease;
+}
+
+@keyframes sweep {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-15deg); }
+    75% { transform: rotate(15deg); }
+    100% { transform: rotate(0deg); }
+}
+
+/* Animación general para iconos */
+.fas, .far, .fa {
+    color: #e50914;
+    transition: all 0.3s ease;
+}
+
+.fas:hover, .far:hover, .fa:hover {
+    filter: brightness(1.2);
+    text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+}
+
+/* Estilos específicos para los iconos en los filtros */
+.filtro-grupo i {
+    color: #e50914;
+    font-size: 1.2rem;
+    width: 20px;
+    text-align: center;
+    margin-right: 8px;
+}
+
+.filtro-grupo i:hover {
+    transform: scale(1.2);
+    filter: brightness(1.2);
+}
+
+/* Estilos para el icono de ordenamiento de likes */
+.orden-likes i {
+    color: #e50914;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.orden-likes:hover i {
+    transform: scale(1.2);
+    filter: brightness(1.2);
+}
+
+/* Estilos para el icono de limpiar filtros */
+.limpiar-filtros i {
+    color: #e50914;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.limpiar-filtros:hover i {
+    transform: scale(1.2);
+    filter: brightness(1.2);
+}
+
+/* Estilos para los iconos en los botones de acción */
+.btn-editar::after,
+.btn-eliminar::after,
+.btn-nuevo::after,
+.btn-volver::after {
+    color: #e50914;
+    transition: all 0.3s ease;
+}
+
+/* Estilos para el icono del usuario en el navbar */
+.dropdown .fas {
+    color: #e50914;
+    margin-right: 5px;
+}
+
+/* Estilos base para todos los iconos */
+.fas, .far, .fa {
+    transition: all 0.3s ease;
+}
+
+/* Estilos para el icono de ordenamiento de likes */
+.orden-likes i {
+    transition: all 0.3s ease;
+}
+
+/* Estilos para el icono de limpiar filtros */
+.limpiar-filtros i {
+    transition: all 0.3s ease;
+}
+
+/* Estilos para los iconos en los botones de acción */
+.btn-editar::after,
+.btn-eliminar::after,
+.btn-nuevo::after,
+.btn-volver::after {
+    transition: all 0.3s ease;
+}
+
+/* Estilos para el icono del usuario en el navbar */
+.dropdown .fas {
+    margin-right: 5px;
+}
+
+/* Efecto de brillo al hacer hover sobre cualquier icono */
+.fas:hover, 
+.far:hover, 
+.fa:hover {
+    filter: brightness(1.2);
+    text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+}
+
+/* Modificar animaciones existentes para mantener consistencia */
+.btn-nuevo:hover::after,
+.btn-editar:hover::after,
+.btn-eliminar:hover::after,
+.btn-volver:hover::after,
+.editar-pelicula-container .btn-nuevo:hover::after {
+    animation: iconScale 0.3s ease forwards;
+}
+
+@keyframes iconScale {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    100% { transform: translate(-50%, -50%) scale(1.2); }
+}
+
+/* Ajustar la animación del icono de ordenamiento */
+.orden-likes:hover i {
+    animation: rotateAndScale 0.5s ease;
+}
+
+@keyframes rotateAndScale {
+    0% { transform: rotate(0deg) scale(1); }
+    100% { transform: rotate(360deg) scale(1.2); }
+}
+
+/* Ajustar la animación del icono de limpiar filtros */
+.limpiar-filtros:hover i {
+    animation: sweepAndScale 0.5s ease;
+}
+
+@keyframes sweepAndScale {
+    0% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(-15deg) scale(1.2); }
+    75% { transform: rotate(15deg) scale(1.2); }
+    100% { transform: rotate(0deg) scale(1.2); }
+}
+
+/* Estilos para la sección de usuarios */
+.table-responsive {
+    margin-top: 20px;
+    border: 2px solid #e50914;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Botones de acción en la tabla de usuarios */
+.btn-sm {
+    padding: 5px 10px;
+    margin: 0 3px;
+    background-color: transparent;
+    border: 2px solid #e50914;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.btn-sm:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+}
+
+.btn-sm i {
+    color: #fff;
+}
+
+/* Modal de usuarios */
+.modal-content {
+    background-color: #141414;
+    border: 2px solid #e50914;
+}
+
+.modal-header {
+    border-bottom: 1px solid #e50914;
+    padding: 1rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #e50914;
+    padding: 1rem;
+}
+
+.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Botón nuevo usuario */
+.btn-success {
+    background-color: transparent;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    border: 2px solid #e50914;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.btn-success:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+/* Secciones */
+h2 {
+    color: #fff;
+    margin: 30px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid;
+    border-image: linear-gradient(to right, #e50914, transparent) 1;
+}
+
+/* Enlaces de navegación */
+.nav-link {
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 2px solid #e50914;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    margin: 0 10px;
+}
+
+.nav-link:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+}
+
+/* Tabla de solicitudes pendientes */
+.table-dark {
+    background-color: #141414;
+    color: #fff;
+}
+
+.table-dark th {
+    background-color: rgba(229, 9, 20, 0.1);
+    border-bottom: 2px solid #e50914;
+}
+
+.table-dark td {
+    border: none;
+}
+
+.table-dark tr:hover {
+    background-color: rgba(229, 9, 20, 0.1);
+}
+
+/* Botones de gestión de solicitudes */
+.btn-primary, .btn-danger {
+    background-color: transparent;
+    border: 2px solid #e50914;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover, .btn-danger:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+}
+
+/* Navegación entre secciones */
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.nav-buttons a {
+    background-color: transparent;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 2px solid #e50914;
+    transition: all 0.3s ease;
+}
+
+.nav-buttons a:hover {
+    background-color: #e50914;
+    transform: translateY(-2px);
+}

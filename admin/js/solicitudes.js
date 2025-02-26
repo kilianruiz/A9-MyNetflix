@@ -1,25 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Cargar tabla inicial
-    cargarTablaUsuarios();
-
-    // Event listener para nueva película
-    document.getElementById('btnNuevoUsuario').addEventListener('click', function(e) {
-        e.preventDefault();
-        window.location.href = 'createUser.php';
-    });
+    cargarTablaSolicitudes();
 
     // Event listener para el selector de registros por página
     document.getElementById('registros').addEventListener('change', function() {
-        cargarTablaUsuarios(1, this.value);
+        cargarTablaSolicitudes(1, this.value);
     });
 });
 
 // Función para cargar la tabla de películas
-function cargarTablaUsuarios(pagina = 1, registros = 5) {
-    fetch(`ajax/obtener_usuarios.php?pagina=${pagina}&registros=${registros}`)
+function cargarTablaSolicitudes(pagina = 1, registros = 5) {
+    fetch(`ajax/obtener_solicitudes.php?pagina=${pagina}&registros=${registros}`)
         .then(response => response.text())
         .then(data => {
-            document.getElementById('tablaUsuarios').innerHTML = data;
+            document.getElementById('tablaSolicitudes').innerHTML = data;
             // Agregar event listeners a los botones después de cargar la tabla
             configurarBotonesAcciones();
             configurarPaginacion();
@@ -34,7 +28,7 @@ function configurarPaginacion() {
             e.preventDefault();
             const pagina = this.getAttribute('data-pagina');
             const registros = document.getElementById('registros').value;
-            cargarTablaUsuarios(pagina, registros);
+            cargarTablaSolicitudes(pagina, registros);
         });
     });
 }
@@ -75,7 +69,7 @@ function eliminarPelicula(id) {
     .then(data => {
         if (data.success) {
             // Recargar la tabla después de eliminar
-            cargarTablaUsuarios();
+            cargarTablaSolicitudes();
         } else {
             alert('Error al eliminar la película');
         }

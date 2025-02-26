@@ -37,16 +37,22 @@ $peliculas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <img src="../img/logo-grande.png" alt="" class="navbar-logo">
+            <img src="./img/logo-grande.png" alt="" class="navbar-logo">
+            <form class="d-flex flex-grow-1" role="search" id="searchForm">
+                <input class="form-control" type="search" placeholder="Buscar..." aria-label="Search" id="searchQuery">
+                <button class="btn btn-outline-success" type="submit">Buscar</button>
+            </form>
             <?php if(isset($_SESSION['username'])): ?>
                 <div class="dropdown">
                     <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user-tie"></i> <?php echo $_SESSION['username']; ?>
+                        <i class="fas fa-user"></i> <?php echo $_SESSION['username']; ?>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="../proc/logout.php">Cerrar sesión</a></li>
+                        <li><a class="dropdown-item" href="./proc/logout.php">Cerrar sesión</a></li>
                     </ul>
                 </div>
+            <?php else: ?>
+                <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginModal">Login/Register</button>
             <?php endif; ?>
         </div>
     </nav>

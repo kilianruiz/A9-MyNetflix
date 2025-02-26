@@ -1,37 +1,5 @@
 <?php
-require_once '../bbdd/db.php';
-
-// Obtener solicitudes pendientes
-try {
-    $stmt = $pdo->query("
-        SELECT 
-            rp.id_solicitud,
-            rp.nombre,
-            rp.email,
-            rp.fecha_registro,
-            rp.estado
-        FROM registro_pendiente rp
-        WHERE rp.estado = 'pendiente'
-        ORDER BY rp.fecha_registro DESC
-    ");
-    $solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Obtener usuarios registrados
-    $stmt = $pdo->query("
-        SELECT 
-            u.id,
-            u.nombre,
-            u.email,
-            u.fecha_registro,
-            r.nombre_rol
-        FROM usuarios u
-        LEFT JOIN roles r ON u.id_rol = r.id_rol
-        ORDER BY u.fecha_registro DESC
-    ");
-    $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    $error = "Error al obtener los datos: " . $e->getMessage();
-}
+    require_once '../bbdd/db.php';
 ?>
 
 <!DOCTYPE html>
@@ -43,105 +11,101 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="../css/stylesAdmin.css">
+    <link rel="stylesheet" href="../css/stylesSolicitudes.css">
 </head>
 <body class="bg-dark text-white">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="../index.php">
-                <img src="../img/logo-grande.png" alt="Logo" height="40">
-            </a>
-            <div class="d-flex">
-                <a href="./gestionAdmin.php" class="btn btn-outline-light me-2">Volver</a>
-                <a href="../proc/logout.php" class="btn btn-danger">Cerrar sesión</a>
-            </div>
+            <img src="./img/logo-grande.png" alt="" class="navbar-logo">
+            <form class="d-flex flex-grow-1" role="search" id="searchForm">
+                <input class="form-control" type="search" placeholder="Buscar..." aria-label="Search" id="searchQuery">
+                <button class="btn btn-outline-success" type="submit">Buscar</button>
+            </form>
+            <?php if(isset($_SESSION['username'])): ?>
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user"></i> <?php echo $_SESSION['username']; ?>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="./proc/logout.php">Cerrar sesión</a></li>
+                    </ul>
+                </div>
+            <?php else: ?>
+                <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginModal">Login/Register</button>
+            <?php endif; ?>
         </div>
-    </nav>
+    </nav>    
 
-    <div class="container mt-4">
+    <div class="container">
         <h2 class="mb-4">Gestión de Solicitudes de Registro</h2>
         
-        <?php if (isset($error)): ?>
-            <div class="alert alert-danger"><?php echo $error; ?></div>
-        <?php endif; ?>
-
-        <?php if (empty($solicitudes)): ?>
-            <div class="alert alert-info">No hay solicitudes pendientes.</div>
-        <?php else: ?>
-            <div class="table-responsive">
-                <table class="table table-dark table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Email</th>
-                            <th>Fecha de Solicitud</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($solicitudes as $solicitud): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($solicitud['id_solicitud']); ?></td>
-                            <td><?php echo htmlspecialchars($solicitud['nombre']); ?></td>
-                            <td><?php echo htmlspecialchars($solicitud['email']); ?></td>
-                            <td><?php echo htmlspecialchars($solicitud['fecha_registro']); ?></td>
-                            <td>
-                                <button class="btn btn-success btn-sm" 
-                                        onclick="gestionarSolicitud(<?php echo $solicitud['id_solicitud']; ?>, 'aceptar')">
-                                    Aceptar
-                                </button>
-                                <button class="btn btn-danger btn-sm"
-                                        onclick="gestionarSolicitud(<?php echo $solicitud['id_solicitud']; ?>, 'rechazar')">
-                                    Rechazar
-                                </button>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        <?php endif; ?>
-
+        <div id="tablaSolicitudes"></div>
+            
         <h2 class="mt-5 mb-4">Gestión de Usuarios</h2>
+        <div class="registros-selector">
+            <label for="registros">Mostrar:</label>
+            <select id="registros">
+                <option value="2">2</option>
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+            </select>
+            <span>registros por página</span>
+        </div>
+
+        <div class="filtros-container">
+            <div class="filtro-grupo">
+                <i class="fas fa-film"></i>
+                <input type="text" class="filtro-input" id="filtroTitulo" placeholder="Buscar por título de película...">
+            </div>
+            
+            <div class="filtro-grupo">
+                <i class="fas fa-user"></i>
+                <input type="text" class="filtro-input" id="filtroAutor" placeholder="Buscar por nombre del director...">
+            </div>
+            
+            <div class="filtro-grupo">
+                <i class="fas fa-calendar"></i>
+                <input type="date" class="filtro-input" id="filtroFecha" placeholder="Seleccionar fecha de lanzamiento">
+            </div>
+            
+            <div class="filtro-grupo">
+                <i class="fas fa-tags"></i>
+                <select class="filtro-input" id="filtroCategoria">
+                    <option value="">Seleccionar categoría...</option>
+                    <?php
+                    $query = "SELECT * FROM categorias ORDER BY nombre_categoria";
+                    $categorias = $pdo->query($query)->fetchAll();
+                    foreach ($categorias as $categoria) {
+                        echo "<option value='" . $categoria['id_categoria'] . "'>" . htmlspecialchars($categoria['nombre_categoria']) . "</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+            
+            <div class="filtro-grupo">
+                <i class="fas fa-heart"></i>
+                <button class="orden-likes" id="ordenLikes" data-orden="none" title="Ordenar por likes">
+                    <i class="fas fa-sort"></i>
+                </button>
+            </div>
+
+            <div class="filtro-grupo">
+                <i class="fas fa-broom"></i>
+                <button class="limpiar-filtros" id="limpiarFiltros" title="Limpiar todos los filtros">
+                    <i class="fas fa-broom"></i>
+                </button>
+            </div>
+        </div>
         <button class="btn btn-success mb-3" onclick="showUserModal()">
             <i class="fas fa-plus"></i> Nuevo Usuario
         </button>
-
-        <div class="table-responsive">
-            <table class="table table-dark table-striped">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Rol</th>
-                        <th>Fecha Registro</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($usuarios as $usuario): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($usuario['id']); ?></td>
-                        <td><?php echo htmlspecialchars($usuario['nombre']); ?></td>
-                        <td><?php echo htmlspecialchars($usuario['email']); ?></td>
-                        <td><?php echo htmlspecialchars($usuario['nombre_rol']); ?></td>
-                        <td><?php echo htmlspecialchars($usuario['fecha_registro']); ?></td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" onclick="editUser(<?php echo $usuario['id']; ?>)">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteUser(<?php echo $usuario['id']; ?>)">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+                    
+        <div id="tablaUsuarios"></div>
+        
     </div>
+
+    <!-- Modal para Nueva/Editar Película -->
 
     <div class="modal fade" id="userModal" tabindex="-1">
         <div class="modal-dialog">
@@ -247,5 +211,6 @@ try {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/usuarios.js"></script>
+    <script src="js/solicitudes.js"></script>
 </body>
 </html> 
