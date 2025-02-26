@@ -146,3 +146,81 @@ function showTrailerModal(trailerUrl, movieTitle) {
         showCloseButton: true
     });
 }
+  const trailerModal = Swal.fire({
+    title: `Trailer de ${movieTitle}`,
+    html: `
+      <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+        <iframe 
+          src="${trailerUrl}" 
+          frameborder="0" 
+          allowfullscreen 
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+        ></iframe>
+      </div>
+    `,
+    width: '80%',
+    heightAuto: false,
+    showConfirmButton: false, // Ocultamos el botón "OK"
+    showCloseButton: true, // Mostramos el botón de cierre
+    customClass: {
+      container: 'swal-modal-container',
+      popup: 'swal-popup-custom', // Clase personalizada para el popup
+      closeButton: 'swal-close-button', // Clase personalizada para el botón de cierre
+    },
+    willClose: () => {
+      // Al cerrar el modal del trailer, volvemos al modal de los detalles de la película
+      fetch('./php/movies.php')
+        .then(response => response.json())
+        .then(movies => {
+          const movie = movies.find(m => m.title === movieTitle);
+          if (movie) {
+            showMovieModal(movie);
+          }
+        })
+        .catch(error => console.error('Error al cargar las películas:', error));
+    },
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('searchQuery');
+    const topContainer = document.getElementById('top-container');
+
+    // Prevent form submission
+    searchForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+    });
+
+    // Add input event listener for real-time search
+    searchInput.addEventListener('input', function() {
+        const searchQuery = this.value;
+        
+        fetch(`proc/search.php?query=${encodeURIComponent(searchQuery)}`)
+            .then(response => response.json())
+            .then(data => {
+                // Clear the container
+                topContainer.innerHTML = '';
+                
+                // Create movie cards for each result
+                data.forEach(movie => {
+                    const movieCard = document.createElement('div');
+                    movieCard.className = 'movie-card';
+                    movieCard.innerHTML = `
+                        <img src="${movie.poster}" alt="${movie.title}">
+                        <h3>${movie.title}</h3>
+                    `;
+                    topContainer.appendChild(movieCard);
+                });
+                
+                // If no results found
+                if (data.length === 0) {
+                    topContainer.innerHTML = '<p>No se encontraron resultados</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                topContainer.innerHTML = '<p>Error al buscar películas</p>';
+            });
+    });
+});
