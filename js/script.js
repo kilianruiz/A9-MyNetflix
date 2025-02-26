@@ -135,3 +135,46 @@ function showTrailerModal(trailerUrl, movieTitle) {
     },
   });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('searchQuery');
+    const topContainer = document.getElementById('top-container');
+
+    // Prevent form submission
+    searchForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+    });
+
+    // Add input event listener for real-time search
+    searchInput.addEventListener('input', function() {
+        const searchQuery = this.value;
+        
+        fetch(`proc/search.php?query=${encodeURIComponent(searchQuery)}`)
+            .then(response => response.json())
+            .then(data => {
+                // Clear the container
+                topContainer.innerHTML = '';
+                
+                // Create movie cards for each result
+                data.forEach(movie => {
+                    const movieCard = document.createElement('div');
+                    movieCard.className = 'movie-card';
+                    movieCard.innerHTML = `
+                        <img src="${movie.poster}" alt="${movie.title}">
+                        <h3>${movie.title}</h3>
+                    `;
+                    topContainer.appendChild(movieCard);
+                });
+                
+                // If no results found
+                if (data.length === 0) {
+                    topContainer.innerHTML = '<p>No se encontraron resultados</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                topContainer.innerHTML = '<p>Error al buscar películas</p>';
+            });
+    });
+});
