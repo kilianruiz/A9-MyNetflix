@@ -145,7 +145,7 @@ function showTrailerModal(trailerUrl, movieTitle) {
         showConfirmButton: false,
         showCloseButton: true
     });
-}
+
   const trailerModal = Swal.fire({
     title: `Trailer de ${movieTitle}`,
     html: `
