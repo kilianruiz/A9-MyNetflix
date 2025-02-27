@@ -1,31 +1,38 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadMovies();
+    loadCategories();
 });
 
-function loadMovies() {
-    fetch('./php/movies.php')
-        .then(response => response.json())
-        .then(data => {
-            const topContainer = document.getElementById('top-container');
-            const otherContainer = document.getElementById('other-container');
+function loadMovies(filters = {}) {
+    fetch('./php/movies.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(filters)
+    })
+    .then(response => response.json())
+    .then(data => {
+        const topContainer = document.getElementById('top-container');
+        const otherContainer = document.getElementById('other-container');
 
-            // Limpiar contenedores
-            topContainer.innerHTML = '';
-            otherContainer.innerHTML = '';
+        // Limpiar contenedores
+        topContainer.innerHTML = '';
+        otherContainer.innerHTML = '';
 
-            // Mostrar las 5 películas con más likes (con número)
-            data.topMovies.forEach((movie, index) => {
-                const movieItem = createMovieElement(movie, index + 1, true); // Agregar número
-                topContainer.appendChild(movieItem);
-            });
+        // Mostrar las 5 películas con más likes (con número)
+        data.topMovies.forEach((movie, index) => {
+            const movieItem = createMovieElement(movie, index + 1, true);
+            topContainer.appendChild(movieItem);
+        });
 
-            // Mostrar el resto de las películas (sin número)
-            data.otherMovies.forEach((movie, index) => {
-                const movieItem = createMovieElement(movie, index + 1, false); // No agregar número
-                otherContainer.appendChild(movieItem);
-            });
-        })
-        .catch(error => console.error('Error al cargar las películas:', error));
+        // Mostrar el resto de las películas (sin número)
+        data.otherMovies.forEach((movie, index) => {
+            const movieItem = createMovieElement(movie, index + 1, false);
+            otherContainer.appendChild(movieItem);
+        });
+    })
+    .catch(error => console.error('Error al cargar las películas:', error));
 }
 
 function createMovieElement(movie, index, showNumber = true) {
@@ -187,15 +194,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchQuery');
     const topContainer = document.getElementById('top-container');
 
-    // Prevent form submission
-    searchForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-    });
-
-    // Add input event listener for real-time search
+    // Eliminar el código que agrega los filtros al DOM ya que ahora están en la navbar
     searchInput.addEventListener('input', function() {
         const searchQuery = this.value;
         
+        if (!searchQuery.trim()) {
+            loadMovies();
+            return;
+        }
+
         fetch(`proc/search.php?query=${encodeURIComponent(searchQuery)}`)
             .then(response => response.json())
             .then(data => {
@@ -203,14 +210,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 topContainer.innerHTML = '';
                 
                 // Create movie cards for each result
-                data.forEach(movie => {
-                    const movieCard = document.createElement('div');
-                    movieCard.className = 'movie-card';
-                    movieCard.innerHTML = `
-                        <img src="${movie.poster}" alt="${movie.title}">
-                        <h3>${movie.title}</h3>
-                    `;
-                    topContainer.appendChild(movieCard);
+                data.forEach((movie, index) => {
+                    const movieItem = document.createElement('div');
+                    movieItem.classList.add('top-item');
+
+                    // Agregar el número solo para los primeros 5 resultados
+                    if (index < 5) {
+                        const movieNumber = document.createElement('div');
+                        movieNumber.classList.add('top-number');
+                        movieNumber.textContent = index + 1;
+                        movieItem.appendChild(movieNumber);
+                    }
+
+                    const movieImg = document.createElement('img');
+                    movieImg.src = movie.poster;
+                    movieImg.alt = movie.title;
+                    movieImg.classList.add('movie-poster');
+                    movieImg.addEventListener('click', () => showMovieModal(movie));
+                    movieItem.appendChild(movieImg);
+
+                    topContainer.appendChild(movieItem);
                 });
                 
                 // If no results found
@@ -223,4 +242,135 @@ document.addEventListener('DOMContentLoaded', function() {
                 topContainer.innerHTML = '<p>Error al buscar películas</p>';
             });
     });
+
+    // Estado de los filtros
+    let activeFilters = new Set();
+
+    // Event listeners para los botones de filtro
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            
+            if (activeFilters.has(filter)) {
+                activeFilters.delete(filter);
+                this.classList.remove('active');
+            } else {
+                activeFilters.add(filter);
+                this.classList.add('active');
+            }
+
+            // Construir objeto de filtros
+            const filters = {
+                liked: activeFilters.has('liked'),
+                notLiked: activeFilters.has('not-liked')
+            };
+
+            loadMovies(filters);
+        });
+    });
+
+    // Event listener para el botón de limpiar filtros
+    document.getElementById('clearFilters').addEventListener('click', function() {
+        // Limpiar los filtros activos
+        activeFilters.clear();
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Limpiar el campo de búsqueda
+        document.getElementById('searchQuery').value = '';
+        
+        // Recargar las películas
+        loadMovies();
+    });
+});
+
+function loadCategories() {
+    fetch('./php/categories.php')
+        .then(response => response.json())
+        .then(categories => {
+            const categoryList = document.getElementById('categoryList');
+            categoryList.innerHTML = `
+                <li><a class="dropdown-item" href="#" data-category-id="">Todas las categorías</a></li>
+                <li><hr class="dropdown-divider"></li>
+            `;
+            
+            categories.forEach(category => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <a class="dropdown-item category-item" href="#" data-category-id="${category.id_categoria}">
+                        <input type="checkbox" class="form-check-input me-2" id="cat-${category.id_categoria}">
+                        <label for="cat-${category.id_categoria}">${category.nombre_categoria}</label>
+                    </a>`;
+                categoryList.appendChild(li);
+            });
+
+            // Event listener para los checkboxes de categorías
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const checkbox = item.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    
+                    // Actualizar el texto del botón
+                    updateCategoryButtonText();
+                    
+                    // Cargar películas con los filtros actuales
+                    loadMovies(getActiveFilters());
+                });
+            });
+        })
+        .catch(error => console.error('Error cargando categorías:', error));
+}
+
+function updateCategoryButtonText() {
+    const selectedCategories = getSelectedCategories();
+    const categoryButton = document.getElementById('categoryDropdown');
+    
+    if (selectedCategories.length === 0) {
+        categoryButton.innerHTML = '<i class="fas fa-tags"></i>';
+    } else {
+        categoryButton.innerHTML = `<i class="fas fa-tags"></i> (${selectedCategories.length})`;
+    }
+}
+
+function getSelectedCategories() {
+    return Array.from(document.querySelectorAll('.category-item input[type="checkbox"]:checked'))
+        .map(checkbox => checkbox.closest('.category-item').dataset.categoryId);
+}
+
+function getActiveFilters() {
+    const activeFilters = {};
+    
+    // Obtener categorías seleccionadas
+    const selectedCategories = getSelectedCategories();
+    if (selectedCategories.length > 0) {
+        activeFilters.categories = selectedCategories;
+    }
+    
+    // Añadir otros filtros activos
+    document.querySelectorAll('.filter-btn.active').forEach(btn => {
+        activeFilters[btn.dataset.filter] = true;
+    });
+    
+    return activeFilters;
+}
+
+// Modificar el event listener para limpiar filtros
+document.getElementById('clearFilters').addEventListener('click', function() {
+    // Limpiar checkboxes de categorías
+    document.querySelectorAll('.category-item input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    
+    // Limpiar otros filtros
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Actualizar texto del botón de categorías
+    updateCategoryButtonText();
+    
+    // Recargar películas sin filtros
+    loadMovies({});
 });
