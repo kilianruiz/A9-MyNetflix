@@ -285,44 +285,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function loadCategories() {
-    fetch('./php/categories.php')
-        .then(response => response.json())
-        .then(categories => {
-            const categoryList = document.getElementById('categoryList');
-            categoryList.innerHTML = `
-                <li><a class="dropdown-item" href="#" data-category-id="">Todas las categorías</a></li>
-                <li><hr class="dropdown-divider"></li>
-            `;
-            
-            categories.forEach(category => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <a class="dropdown-item category-item" href="#" data-category-id="${category.id_categoria}">
-                        <input type="checkbox" class="form-check-input me-2" id="cat-${category.id_categoria}">
-                        <label for="cat-${category.id_categoria}">${category.nombre_categoria}</label>
-                    </a>`;
-                categoryList.appendChild(li);
-            });
-
-            // Event listener para los checkboxes de categorías
-            document.querySelectorAll('.category-item').forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const checkbox = item.querySelector('input[type="checkbox"]');
-                    checkbox.checked = !checkbox.checked;
-                    
-                    // Actualizar el texto del botón
-                    updateCategoryButtonText();
-                    
-                    // Cargar películas con los filtros actuales
-                    loadMovies(getActiveFilters());
-                });
-            });
-        })
-        .catch(error => console.error('Error cargando categorías:', error));
-}
-
 function updateCategoryButtonText() {
     const selectedCategories = getSelectedCategories();
     const categoryButton = document.getElementById('categoryDropdown');
@@ -343,18 +305,32 @@ function getActiveFilters() {
     const activeFilters = {};
     
     // Obtener categorías seleccionadas
-    const selectedCategories = getSelectedCategories();
+    const selectedCategories = Array.from(document.querySelectorAll('.category-item input[type="checkbox"]:checked'))
+        .map(checkbox => checkbox.closest('.category-item').dataset.categoryId);
+    
     if (selectedCategories.length > 0) {
         activeFilters.categories = selectedCategories;
     }
     
     // Añadir otros filtros activos
     document.querySelectorAll('.filter-btn.active').forEach(btn => {
-        activeFilters[btn.dataset.filter] = true;
+        const filter = btn.dataset.filter;
+        if (filter === 'liked') {
+            activeFilters.liked = true;
+        } else if (filter === 'not-liked') {
+            activeFilters.notLiked = true;
+        }
     });
+    
+    // Añadir búsqueda si existe
+    const searchQuery = document.getElementById('searchQuery').value.trim();
+    if (searchQuery) {
+        activeFilters.search = searchQuery;
+    }
     
     return activeFilters;
 }
+
 
 // Modificar el event listener para limpiar filtros
 document.getElementById('clearFilters').addEventListener('click', function() {

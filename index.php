@@ -34,8 +34,8 @@
         <?php
             require_once './bbdd/db.php';
             try {
-                // Realiza la consulta SQL
-                $query = "SELECT nombre_categoria FROM categorias ORDER BY nombre_categoria";
+                // Modificar la consulta para obtener también el ID de la categoría
+                $query = "SELECT id_categoria, nombre_categoria FROM categorias ORDER BY nombre_categoria";
                 $categorias = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);
                 
                 // Verifica si se obtuvieron resultados
@@ -44,8 +44,10 @@
                 } else {
                     // Si se obtienen categorías, se muestra cada una en el dropdown
                     foreach ($categorias as $categoria) {
-                        echo '<li><a class="dropdown-item" href="#" data-category-id="' . htmlspecialchars($categoria['id_categoria']) . '">' 
-                            . htmlspecialchars($categoria['nombre_categoria']) . '</a></li>';
+                        echo '<li><a class="dropdown-item category-item" href="#" data-category-id="' . htmlspecialchars($categoria['id_categoria']) . '">
+                            <input type="checkbox" class="form-check-input me-2" id="cat-' . htmlspecialchars($categoria['id_categoria']) . '">
+                            <label for="cat-' . htmlspecialchars($categoria['id_categoria']) . '">' . htmlspecialchars($categoria['nombre_categoria']) . '</label>
+                        </a></li>';
                     }
                 }
             } catch (PDOException $e) {
@@ -58,7 +60,6 @@
         ?>
     </ul>
 </div>
-
 
           <button class="btn btn-outline-primary filter-btn" data-filter="liked">
             <i class="fas fa-heart"></i> 
