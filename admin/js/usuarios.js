@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Asegurarse de que el botón de guardar tiene el evento `click`
     document.getElementById('btnGuardarUsuario').addEventListener('click', function (e) {
         e.preventDefault(); // Evita que se recargue la página
-        console.log('Botón Guardar clickeado'); // Debug para ver si el botón responde
         saveUser();
     });
 
