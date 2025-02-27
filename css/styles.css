@@ -22,9 +22,20 @@ body {
   background-color: rgba(40,40,40,255);
 }
 
+/* Modificar el estilo del formulario de búsqueda */
+.navbar form.d-flex {
+  flex: 1; /* Hace que el formulario ocupe todo el espacio disponible */
+  max-width: 800px; /* Aumentar el ancho máximo */
+  margin: 0 20px; /* Añadir margen a los lados */
+}
+
 .form-control {
   margin-top: 13px;
   height: 40px;
+  width: 100%; /* Asegurar que el input ocupe todo el ancho del formulario */
+  margin-right: 0;
+  padding: 8px 12px;
+  font-size: 14px;
 }
 
 /* Contenedor principal de películas */
@@ -153,21 +164,6 @@ body {
 }
 
 /* Estilos para los inputs */
-.form-control {
-  display: block;
-  width: 100%;
-  padding: 0.375rem 0.75rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #fff;
-  background-color: #212529;
-  border: 1px solid #495057;
-  border-radius: 0.25rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  margin-bottom: 1rem;
-}
-
 .form-control:focus {
   color: #fff;
   background-color: #2c3034;
@@ -298,21 +294,39 @@ body {
 /* Mantener los estilos existentes y ajustar otras_pelis */
 .otras_pelis {
   display: grid;
-  grid-template-columns: repeat(9, 1fr); /* 8 columnas */
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); /* Ajuste responsive */
+  gap: 20px; /* Espacio entre películas */
+  padding: 20px; /* Padding alrededor del contenedor */
+  border-radius: 10px; /* Bordes redondeados del contenedor */
+  margin: 20px 0; /* Margen superior e inferior */
 }
 
 .otras_pelis .top-item {
   position: relative;
-  flex: 0 0 auto;
-  width: 150px; /* Mismo ancho que los posters originales */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animación suave */
+  padding: 10px; /* Padding alrededor de cada película */
+  background-color: rgba(20, 20, 20, 0.5); /* Fondo para cada película */
+  border-radius: 8px; /* Bordes redondeados */
+  display: flex;
+  justify-content: center;
+}
+
+.otras_pelis .top-item:hover {
+  transform: translateY(-5px); /* Efecto de elevación al pasar el mouse */
+  box-shadow: 0 6px 12px rgba(255, 0, 0, 0.2); /* Sombra roja sutil */
 }
 
 .otras_pelis .movie-poster {
-  width: 150px; /* Mismo ancho que los posters originales */
-  height: 225px; /* Misma altura que los posters originales */
+  width: 150px;
+  height: 225px;
   border-radius: 8px;
   object-fit: cover;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease; /* Animación suave para la imagen */
+}
+
+.otras_pelis .movie-poster:hover {
+  transform: scale(1.05); /* Ligero zoom al pasar el mouse */
 }
 
 /* Estilos para los resultados de búsqueda */
@@ -359,4 +373,143 @@ body {
     margin-bottom: 20px;
     margin-left: 20px;
     font-size: 1.5rem;
+}
+
+/* Estilos para los botones de filtro */
+.filter-buttons {
+    margin-bottom: 20px;
+}
+
+.filter-buttons .btn {
+    margin-right: 10px;
+}
+
+.btn-outline-primary {
+    border-color: red;
+    color: red;
+}
+
+.btn-outline-primary:hover {
+    background-color: red;
+    color: white;
+    border-color: red;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+/* Ajustes para los filtros en la navbar */
+.filter-container {
+    display: flex;
+    padding: 0;
+    margin-right: auto; /* Esto empujará el contenedor de usuario hacia la derecha */
+}
+
+.filter-btn.active {
+    background-color: red;
+    color: white;
+    border-color: red;
+}
+
+.btn-outline-danger {
+    border-color: red;
+    color: red;
+}
+
+.btn-outline-danger:hover {
+    background-color: red;
+    color: white;
+}
+
+.gap-3 {
+    gap: 1rem;
+}
+
+/* Eliminar los estilos de centrado */
+.d-flex.align-items-center.gap-3 {
+    display: flex;
+    align-items: center;
+}
+
+/* Estilos para los filtros en la navbar */
+.navbar .filter-container {
+    margin: 0 20px;
+    padding: 0;
+}
+
+.navbar .filter-container .btn {
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.navbar .d-flex.align-items-center.gap-3 {
+    margin-right: 15px;
+}
+
+/* Ajustar el ancho del formulario de búsqueda */
+.navbar form.d-flex {
+    flex: 1;
+    max-width: 800px;
+    margin: 0 20px;
+}
+
+/* Estilos para el dropdown de categorías */
+.dropdown-menu {
+    background-color: #212529;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.dropdown-item {
+    color: #fff;
+}
+
+.dropdown-item:hover {
+    background-color: #343a40;
+    color: #fff;
+}
+
+.dropdown-divider {
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Estilo activo para el botón de categoría */
+.btn-outline-primary.show {
+    background-color: red;
+    color: white;
+    border-color: red;
+}
+
+/* Estilos para el menú de categorías */
+.category-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+}
+
+.category-item:hover {
+    background-color: #343a40;
+}
+
+.category-item input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.category-item label {
+    margin-bottom: 0;
+    cursor: pointer;
+    color: #fff;
+}
+
+/* Estilo para el botón de categorías cuando hay selecciones */
+#categoryDropdown.has-selections {
+    background-color: red;
+    color: white;
+    border-color: red;
 }

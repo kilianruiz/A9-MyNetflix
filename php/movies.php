@@ -4,48 +4,74 @@ require_once '../bbdd/db.php';
 
 try {
     $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+    
+    // Obtener los filtros del body
+    $data = json_decode(file_get_contents('php://input'), true);
+    $filters = $data ?? [];
 
-    // Consulta para obtener las 5 películas con más likes
-    $topMoviesQuery = "
+    // Base de la consulta
+    $baseQuery = "
         SELECT 
             p.*,
             COUNT(DISTINCT l.id_like_usuario) as likes,
             IF(:user_id IS NOT NULL, COUNT(DISTINCT CASE WHEN l.usuario_id = :user_id THEN l.id_like_usuario END), 0) as user_liked
         FROM peliculas p
         LEFT JOIN likes l ON p.id_pelicula = l.pelicula_id
-        GROUP BY p.id_pelicula
-        ORDER BY likes DESC
-        LIMIT 5
+        LEFT JOIN pelicula_categoria pc ON p.id_pelicula = pc.id_pelicula
     ";
 
+    // Agregar condiciones según los filtros
+    $whereConditions = [];
+    $params = [':user_id' => $userId];
+
+    if (!empty($filters['liked']) && $userId) {
+        $whereConditions[] = "EXISTS (SELECT 1 FROM likes WHERE pelicula_id = p.id_pelicula AND usuario_id = :user_id)";
+    }
+    if (!empty($filters['notLiked']) && $userId) {
+        $whereConditions[] = "NOT EXISTS (SELECT 1 FROM likes WHERE pelicula_id = p.id_pelicula AND usuario_id = :user_id)";
+    }
+    if (!empty($filters['category'])) {
+        $whereConditions[] = "pc.id_categoria = :category_id";
+        $params[':category_id'] = $filters['category'];
+    }
+    if (!empty($filters['categories'])) {
+        $categories = $filters['categories'];
+        $placeholders = str_repeat('?,', count($categories) - 1) . '?';
+        $whereConditions[] = "pc.id_categoria IN ($placeholders)";
+        foreach ($categories as $index => $categoryId) {
+            $params[] = $categoryId;
+        }
+    }
+
+    if (!empty($whereConditions)) {
+        $baseQuery .= " WHERE " . implode(" AND ", $whereConditions);
+    }
+
+    $baseQuery .= " GROUP BY p.id_pelicula";
+
+    // Consulta para las películas top
+    $topMoviesQuery = $baseQuery . " ORDER BY likes DESC LIMIT 5";
+    
+    // Consulta para el resto de películas
+    $otherMoviesQuery = $baseQuery . " ORDER BY fecha_lanzamiento DESC";
+
+    // Ejecutar consultas
     $stmt = $pdo->prepare($topMoviesQuery);
     $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
     $stmt->execute();
     $topMovies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Consulta para obtener el resto de las películas
-    $otherMoviesQuery = "
-        SELECT 
-            p.*,
-            COUNT(DISTINCT l.id_like_usuario) as likes,
-            IF(:user_id IS NOT NULL, COUNT(DISTINCT CASE WHEN l.usuario_id = :user_id THEN l.id_like_usuario END), 0) as user_liked
-        FROM peliculas p
-        LEFT JOIN likes l ON p.id_pelicula = l.pelicula_id
-        GROUP BY p.id_pelicula
-        ORDER BY fecha_lanzamiento DESC
-    ";
-
     $stmt = $pdo->prepare($otherMoviesQuery);
     $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
     $stmt->execute();
-
-    // Excluir las películas ya incluidas en $topMovies
+    
+    // Filtrar las películas que ya están en top
     $topMovieIds = array_column($topMovies, 'id_pelicula');
     $otherMovies = array_filter($stmt->fetchAll(PDO::FETCH_ASSOC), function ($movie) use ($topMovieIds) {
         return !in_array($movie['id_pelicula'], $topMovieIds);
     });
 
-    // Convertir los valores numéricos correctamente
+    // Formatear los datos
     foreach ($topMovies as &$movie) {
         $movie['id'] = intval($movie['id_pelicula']);
         $movie['likes'] = intval($movie['likes']);
@@ -58,11 +84,11 @@ try {
         $movie['user_liked'] = boolval($movie['user_liked']);
     }
 
-    // Devolver ambas listas como JSON
+    // Devolver resultados
     header('Content-Type: application/json');
     echo json_encode([
         'topMovies' => $topMovies,
-        'otherMovies' => array_values($otherMovies) // Reindexar el array
+        'otherMovies' => array_values($otherMovies)
     ]);
 
 } catch (PDOException $e) {
