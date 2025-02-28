@@ -1,4 +1,6 @@
 <?php
+session_start(); 
+
 require_once '../bbdd/db.php';
 
 // Verificar si el usuario está logueado como admin
@@ -33,22 +35,30 @@ $peliculas = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../css/stylesAdmin.css">
+    <style>
+        /* Cambiar color del icono cuando se pasa el cursor */
+        .navbar .fa-user-tie:hover {
+            color: white; /* Cambiar a blanco al pasar el cursor */
+        }
+    </style>
 </head>
-<body>
+<body data-user-logged="<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>" 
+      data-username="<?php echo isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : ''; ?>">
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <img src="./img/logo-grande.png" alt="" class="navbar-logo">
-            <form class="d-flex flex-grow-1" role="search" id="searchForm">
-                <input class="form-control" type="search" placeholder="Buscar..." aria-label="Search" id="searchQuery">
-                <button class="btn btn-outline-success" type="submit">Buscar</button>
-            </form>
+            <img src="../img/logo-grande.png" alt="" class="navbar-logo">
+            
+            <!-- Mover los filtros aquí -->
+            <div class="filter-container">
+                <div class="d-flex align-items-center gap-3">
+        
             <?php if(isset($_SESSION['username'])): ?>
                 <div class="dropdown">
                     <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user"></i> <?php echo $_SESSION['username']; ?>
+                        <i class="fas fa-user-tie"></i> <?php echo $_SESSION['username']; ?>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="./proc/logout.php">Cerrar sesión</a></li>
+                        <li><a class="dropdown-item" href="../proc/logout.php">Cerrar sesión</a></li>
                     </ul>
                 </div>
             <?php else: ?>
@@ -107,7 +117,6 @@ $peliculas = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <div class="filtro-grupo">
-                <i class="fas fa-broom"></i>
                 <button class="limpiar-filtros" id="limpiarFiltros" title="Limpiar todos los filtros">
                     <i class="fas fa-broom"></i>
                 </button>
@@ -115,7 +124,7 @@ $peliculas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <a href="#" class="btn-nuevo" id="btnNuevaPelicula">Nueva Película</a>
-        <a href="./gestion_solicitudes.php" class="" id="">Usuarios</a>
+        <a href="./gestion_solicitudes.php" class="btn-nuevo" id="">Usuarios</a>
         
         <div id="tablaPeliculas">
             <!-- La tabla se cargará aquí dinámicamente -->
