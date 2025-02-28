@@ -86,7 +86,11 @@ h1 {
     font-size: 1.2rem;
     color: #ffffff;
 }
-
+.alert-danger{
+    color: #ff0000;
+    background-color: #000000;
+    border-color: #ff0000;
+}
 table {
     width: 100%;
     border-collapse: separate;
@@ -958,4 +962,3 @@ h2 {
     color: white; 
     border-color: red;
   }
-  

@@ -58,7 +58,7 @@ try {
     <link rel="stylesheet" href="../css/stylesAdmin.css">
 </head>
 
-<body class="bg-dark text-white">
+<body class="text-white">
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
         <img src="../img/logo-grande.png" alt="" class="navbar-logo">
@@ -74,7 +74,7 @@ try {
                     <button class="btn btn-outline-danger dropdown-toggle" type="button" id="roleFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user-tag"></i>
                     </button>
-                    <ul class="dropdown-menu bg-dark" aria-labelledby="roleFilterDropdown">
+                    <ul class="dropdown-menu" aria-labelledby="roleFilterDropdown">
                         <li>
                             <a class="dropdown-item text-white" href="#" onclick="filterByRole('all')">
                                 <i class="fas fa-users"></i> Todos los usuarios
@@ -121,10 +121,10 @@ try {
     <?php endif; ?>
 
     <?php if (empty($solicitudes)): ?>
-        <div class="alert alert-info">No hay solicitudes pendientes.</div>
+        <div class="alert alert-danger">No hay solicitudes pendientes.</div>
     <?php else: ?>
         <div class="table-responsive">
-            <table class="table table-dark table-striped">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -167,7 +167,7 @@ try {
     </div>
 
     <div class="table-responsive">
-        <table class="table table-dark table-striped" id="usersTable">
+        <table id="usersTable">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -206,7 +206,7 @@ try {
 <!-- Modal para usuarios -->
 <div class="modal fade" id="userModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content bg-dark text-white">
+        <div class="modal-content text-white">
             <div class="modal-header">
                 <h5 class="modal-title" id="userModalTitle">Nuevo Usuario</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
