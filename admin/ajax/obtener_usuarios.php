@@ -14,8 +14,11 @@ try {
     $total_registros = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-    // Obtener usuarios
-    $query = "SELECT * FROM usuarios LIMIT $inicio, $registros_por_pagina";
+    // Obtener usuarios con el nombre del rol mediante JOIN
+    $query = "SELECT u.*, r.nombre_rol 
+              FROM usuarios u
+              JOIN roles r ON u.id_rol = r.id_rol
+              LIMIT $inicio, $registros_por_pagina";
     $stmt = $pdo->query($query);
     $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -37,7 +40,7 @@ try {
             <td>' . htmlspecialchars($usuario['id']) . '</td>
             <td>' . htmlspecialchars($usuario['nombre']) . '</td>
             <td>' . htmlspecialchars($usuario['email']) . '</td>
-            <td>' . htmlspecialchars($usuario['id_rol']) . '</td>
+            <td>' . htmlspecialchars($usuario['nombre_rol']) . '</td>
             <td class="actions">
                 <a href="#" class="btn-editar" data-id="' . $usuario['id'] . '">Editar</a>
                 <a href="#" class="btn-eliminar" data-id="' . $usuario['id'] . '">Eliminar</a>
@@ -75,4 +78,4 @@ try {
     echo $html;
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
-} 
+}

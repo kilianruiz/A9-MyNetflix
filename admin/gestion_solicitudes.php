@@ -54,44 +54,13 @@
         </div>
 
         <div class="filtros-container">
-            <div class="filtro-grupo">
-                <i class="fas fa-film"></i>
-                <input type="text" class="filtro-input" id="filtroTitulo" placeholder="Buscar por título de película...">
-            </div>
             
             <div class="filtro-grupo">
                 <i class="fas fa-user"></i>
-                <input type="text" class="filtro-input" id="filtroAutor" placeholder="Buscar por nombre del director...">
-            </div>
-            
-            <div class="filtro-grupo">
-                <i class="fas fa-calendar"></i>
-                <input type="date" class="filtro-input" id="filtroFecha" placeholder="Seleccionar fecha de lanzamiento">
-            </div>
-            
-            <div class="filtro-grupo">
-                <i class="fas fa-tags"></i>
-                <select class="filtro-input" id="filtroCategoria">
-                    <option value="">Seleccionar categoría...</option>
-                    <?php
-                    $query = "SELECT * FROM categorias ORDER BY nombre_categoria";
-                    $categorias = $pdo->query($query)->fetchAll();
-                    foreach ($categorias as $categoria) {
-                        echo "<option value='" . $categoria['id_categoria'] . "'>" . htmlspecialchars($categoria['nombre_categoria']) . "</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-            
-            <div class="filtro-grupo">
-                <i class="fas fa-heart"></i>
-                <button class="orden-likes" id="ordenLikes" data-orden="none" title="Ordenar por likes">
-                    <i class="fas fa-sort"></i>
-                </button>
+                <input type="text" class="filtro-input" id="filtroAutor" placeholder="Buscar por usuario...">
             </div>
 
             <div class="filtro-grupo">
-                <i class="fas fa-broom"></i>
                 <button class="limpiar-filtros" id="limpiarFiltros" title="Limpiar todos los filtros">
                     <i class="fas fa-broom"></i>
                 </button>
