@@ -157,7 +157,12 @@ try {
                     <div class="mb-3">
                         <label for="rol" class="form-label">Rol</label>
                         <select class="form-select" id="rol" name="rol" required>
-                            <!-- Roles se cargarán dinámicamente aquí -->
+                            <option value="">Seleccionar rol</option>
+                            <?php foreach ($roles as $rol): ?>
+                                <option value="<?php echo $rol['id_rol']; ?>">
+                                    <?php echo htmlspecialchars($rol['nombre_rol']); ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                 </form>
