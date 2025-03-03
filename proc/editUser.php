@@ -6,7 +6,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $data = json_decode(file_get_contents('php://input'), true);
         
-        // Validar datos requeridos
         if (empty($data['id']) || empty($data['nombre']) || empty($data['email']) || empty($data['rol'])) {
             throw new Exception('Faltan campos requeridos');
         }
@@ -16,6 +15,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$data['email'], $data['id']]);
         if ($stmt->rowCount() > 0) {
             throw new Exception('El email ya está en uso por otro usuario');
+        }
+
+        // Verificar que no sea el último administrador si se está cambiando el rol
+        $stmt = $pdo->prepare("SELECT id_rol FROM usuarios WHERE id = ?");
+        $stmt->execute([$data['id']]);
+        $currentRole = $stmt->fetch(PDO::FETCH_ASSOC)['id_rol'];
+
+        if ($currentRole == 1 && $data['rol'] != 1) {
+            $stmt = $pdo->prepare("SELECT COUNT(*) as admin_count FROM usuarios WHERE id_rol = 1 AND id != ?");
+            $stmt->execute([$data['id']]);
+            if ($stmt->fetch(PDO::FETCH_ASSOC)['admin_count'] == 0) {
+                throw new Exception('No se puede cambiar el rol del último administrador');
+            }
         }
 
         // Preparar la consulta base

@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     cargarTablaUsuarios();
 
-    // Asegurarse de que el botón de guardar tiene el evento `click`
     document.getElementById('btnGuardarUsuario').addEventListener('click', function (e) {
-        e.preventDefault(); // Evita que se recargue la página
+        e.preventDefault();
         saveUser();
     });
 
@@ -17,28 +16,33 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// Función para mostrar el modal de usuario
 function showUserModal() {
-    document.getElementById('userForm').reset(); // Limpiar el formulario
-    document.getElementById('userId').value = ''; // Resetear el ID
+    document.getElementById('userForm').reset();
+    document.getElementById('userId').value = '';
     new bootstrap.Modal(document.getElementById('userModal')).show();
 }
 
-// Función para guardar usuario (crear o editar)
 function saveUser() {
-    let form = document.getElementById('userForm');
-    let formData = new FormData(form);
+    const userId = document.getElementById('userId').value;
+    const data = {
+        id: userId,
+        nombre: document.getElementById('nombre').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        rol: document.getElementById('rol').value
+    };
 
-    console.log('Enviando datos del formulario:', Object.fromEntries(formData));
+    const url = userId ? '../proc/editUser.php' : '../proc/createUser.php';
 
-    fetch('./createUser.php', { // Asegúrate de que la ruta sea correcta
+    fetch(url, {
         method: 'POST',
-        body: formData
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Respuesta del servidor:', data); // Verifica la respuesta del backend
-
         if (data.success) {
             Swal.fire('Éxito', data.message, 'success');
             document.getElementById('userModal').querySelector('.btn-close').click();
@@ -48,8 +52,60 @@ function saveUser() {
         }
     })
     .catch(error => {
-        console.error('Error en la petición:', error);
         Swal.fire('Error', 'Hubo un problema con la conexión', 'error');
+    });
+}
+
+function eliminarUsuario(id) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('../proc/deleteUser.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: id })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('Éxito', 'Usuario eliminado correctamente', 'success');
+                    cargarTablaUsuarios();
+                } else {
+                    Swal.fire('Error', 'No se pudo eliminar el usuario', 'error');
+                }
+            })
+            .catch(error => {
+                Swal.fire('Error', 'Hubo un problema con la conexión', 'error');
+            });
+        }
+    });
+}
+
+function configurarBotonesAcciones() {
+    document.querySelectorAll('.btn-editar-usuario').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const id = this.getAttribute('data-id');
+            window.location.href = `editUser.php?id=${id}`;
+        });
+    });
+
+    document.querySelectorAll('.btn-eliminar-usuario').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const id = this.getAttribute('data-id');
+            eliminarUsuario(id);
+        });
     });
 }
 
@@ -75,48 +131,4 @@ function configurarPaginacion() {
             cargarTablaUsuarios(pagina, registros);
         });
     });
-}
-
-// Configurar los event listeners para los botones de acción
-function configurarBotonesAcciones() {
-    // Event listeners para botones de editar
-    document.querySelectorAll('.btn-editar-usuario').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const id = this.getAttribute('data-id');
-            window.location.href = `editUser.php?id=${id}`;
-        });
-    });
-
-    // Event listeners para botones de eliminar
-    document.querySelectorAll('.btn-eliminar-usuario').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const id = this.getAttribute('data-id');
-            if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-                eliminarUsuario(id);
-            }
-        });
-    });
-}
-
-// Función para eliminar usuario
-function eliminarUsuario(id) {
-    const formData = new FormData();
-    formData.append('id', id);
-
-    fetch('ajax/deleteUser.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire('Éxito', 'Usuario eliminado correctamente', 'success');
-            cargarTablaUsuarios();
-        } else {
-            Swal.fire('Error', 'No se pudo eliminar el usuario', 'error');
-        }
-    })
-    .catch(error => console.error('Error:', error));
 }

@@ -115,48 +115,9 @@ try {
 
 <div class="container mt-4">
     <h2 class="mb-4">Gestión de Solicitudes de Registro</h2>
-    
-    <?php if (isset($error)): ?>
-        <div class="alert alert-danger"><?php echo $error; ?></div>
-    <?php endif; ?>
-
-    <?php if (empty($solicitudes)): ?>
-        <div class="alert alert-danger">No hay solicitudes pendientes.</div>
-    <?php else: ?>
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Fecha de Solicitud</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($solicitudes as $solicitud): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($solicitud['id_solicitud']); ?></td>
-                        <td><?php echo htmlspecialchars($solicitud['nombre']); ?></td>
-                        <td><?php echo htmlspecialchars($solicitud['email']); ?></td>
-                        <td><?php echo htmlspecialchars($solicitud['fecha_registro']); ?></td>
-                        <td>
-                            <button class="btn btn-success btn-sm" 
-                                    onclick="gestionarSolicitud(<?php echo $solicitud['id_solicitud']; ?>, 'aceptar')">
-                                Aceptar
-                            </button>
-                            <button class="btn btn-danger btn-sm"
-                                    onclick="gestionarSolicitud(<?php echo $solicitud['id_solicitud']; ?>, 'rechazar')">
-                                Rechazar
-                            </button>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    <?php endif; ?>
+    <div id="tablaSolicitudes" class="table-responsive">
+    <!-- Aquí se cargará la tabla de solicitudes -->
+    </div>
 
     <h2 class="mt-5 mb-4">Gestión de Usuarios <span id="roleFilterIndicator"></span></h2>
     <div class="d-flex gap-3 mb-4">
@@ -166,42 +127,9 @@ try {
         <a href="./gestionAdmin.php" class="btn-nuevo" id="btnNuevaPelicula">Películas</a>
     </div>
 
-    <div class="table-responsive">
-        <table id="usersTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Rol</th>
-                    <th>Fecha Registro</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($usuarios as $usuario): ?>
-                <tr data-role-id="<?php echo htmlspecialchars($usuario['id_rol']); ?>" 
-                    data-name="<?php echo htmlspecialchars(strtolower($usuario['nombre'])); ?>"
-                    data-email="<?php echo htmlspecialchars(strtolower($usuario['email'])); ?>">
-                    <td><?php echo htmlspecialchars($usuario['id']); ?></td>
-                    <td><?php echo htmlspecialchars($usuario['nombre']); ?></td>
-                    <td><?php echo htmlspecialchars($usuario['email']); ?></td>
-                    <td><?php echo htmlspecialchars($usuario['nombre_rol']); ?></td>
-                    <td><?php echo htmlspecialchars($usuario['fecha_registro']); ?></td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" onclick="editUser(<?php echo $usuario['id']; ?>)">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteUser(<?php echo $usuario['id']; ?>)">
-                            <i class="fas fa-trash "></i>
-                        </button>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+    <div id="tablaUsuarios" class="table-responsive">
+    <!-- Aquí se cargará la tabla de usuarios -->
     </div>
-</div>
 
 <!-- Modal para usuarios -->
 <div class="modal fade" id="userModal" tabindex="-1">
@@ -246,65 +174,6 @@ try {
 </div>
 
 <script>
-function gestionarSolicitud(id, accion) {
-    Swal.fire({
-        title: '¿Estás seguro?',
-        text: `¿Deseas ${accion} esta solicitud?`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, confirmar',
-        cancelButtonText: 'Cancelar',
-        background: '#212529',
-        color: '#fff'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch('../proc/gestionarSolicitud.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id: id,
-                    accion: accion
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        title: '¡Completado!',
-                        text: data.message,
-                        icon: 'success',
-                        background: '#212529',
-                        color: '#fff'
-                    }).then(() => {
-                        location.reload();
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error',
-                        text: data.message || 'Error al procesar la solicitud',
-                        icon: 'error',
-                        background: '#212529',
-                        color: '#fff'
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Error al procesar la solicitud',
-                    icon: 'error',
-                    background: '#212529',
-                    color: '#fff'
-                });
-            });
-        }
-    });
-}
 
 // Función para filtrar usuarios por rol
 function filterByRole(roleId) {
@@ -422,6 +291,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="js/usuarios.js"></script>
+<script src="js/solicitudes.js"></script>
+<!-- SweetAlert2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet">
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
 
 </body>
 </html>
