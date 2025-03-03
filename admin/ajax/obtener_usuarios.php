@@ -3,7 +3,6 @@ session_start();
 require_once '../../bbdd/db.php'; // Ajusta la ruta según tu estructura
 
 try {
-    $pdo = conectarDB();
 
     // Obtener usuarios registrados
     $stmt = $pdo->query("
