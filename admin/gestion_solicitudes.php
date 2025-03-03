@@ -131,17 +131,17 @@ try {
     <!-- Aquí se cargará la tabla de usuarios -->
     </div>
 
-<!-- Modal para usuarios -->
-<div class="modal fade" id="userModal" tabindex="-1">
+<!-- Modal para Editar Usuario -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content text-white">
+        <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="userModalTitle">Nuevo Usuario</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title" id="userModalLabel">Nuevo Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="userForm">
-                    <input type="hidden" id="userId" name="id">
+                    <input type="hidden" id="userId" name="userId">
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" required>
@@ -152,142 +152,61 @@ try {
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="password" name="password">
-                        <small class="text-muted">Dejar en blanco para mantener la contraseña actual al editar</small>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña">
                     </div>
                     <div class="mb-3">
                         <label for="rol" class="form-label">Rol</label>
-                        <select class="form-control" id="rol" name="rol" required>
-                            <?php foreach ($roles as $rol): ?>
-                            <option value="<?php echo $rol['id_rol']; ?>"><?php echo htmlspecialchars($rol['nombre_rol']); ?></option>
-                            <?php endforeach; ?>
+                        <select class="form-select" id="rol" name="rol" required>
+                            <!-- Roles se cargarán dinámicamente aquí -->
                         </select>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" onclick="saveUser()">Guardar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarUsuario">Guardar</button>
             </div>
         </div>
     </div>
 </div>
 
-<script>
+<!-- Modal para Confirmar Eliminación -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-// Función para filtrar usuarios por rol
-function filterByRole(roleId) {
-    const rows = document.querySelectorAll('#usersTable tbody tr');
-    const indicator = document.getElementById('roleFilterIndicator');
-    
-    if (roleId === 'all') {
-        // Mostrar todos los usuarios
-        rows.forEach(row => {
-            row.style.display = '';
-        });
-        indicator.textContent = '';
-        
-        // Cambiar el estilo del botón de filtro
-        document.getElementById('roleFilterDropdown').classList.remove('active');
-    } else {
-        // Filtrar por el rol seleccionado
-        rows.forEach(row => {
-            const rowRoleId = row.getAttribute('data-role-id');
-            if (rowRoleId == roleId) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-        
-        // Obtener el nombre del rol para mostrarlo como indicador
-        const roleName = document.querySelector(`.dropdown-item[onclick="filterByRole(${roleId})"]`).textContent.trim();
-        indicator.textContent = ` - Filtrando por: ${roleName}`;
-        
-        // Cambiar el estilo del botón de filtro para indicar que está activo
-        document.getElementById('roleFilterDropdown').classList.add('active');
-    }
-    
-    // Aplicar también el filtro de búsqueda si hay texto en el campo
-    applySearchFilter();
-}
-
-// Función para filtrar usuarios por texto de búsqueda
-function applySearchFilter() {
-    const searchQuery = document.getElementById('searchQuery').value.toLowerCase().trim();
-    const rows = document.querySelectorAll('#usersTable tbody tr');
-    
-    if (!searchQuery) {
-        // Si no hay texto de búsqueda, solo aplicamos el filtro de rol (si existe)
-        rows.forEach(row => {
-            if (row.style.display !== 'none') {
-                row.style.display = '';
-            }
-        });
-        return;
-    }
-    
-    rows.forEach(row => {
-        // Solo procesamos las filas que no están ocultas por el filtro de rol
-        if (row.style.display !== 'none') {
-            const name = row.getAttribute('data-name');
-            const email = row.getAttribute('data-email');
-            
-            if (name.includes(searchQuery) || email.includes(searchQuery)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        }
-    });
-}
-
-// Función para limpiar todos los filtros
-function clearAllFilters() {
-    // Limpiar filtro de roles
-    document.getElementById('roleFilterDropdown').classList.remove('active');
-    document.getElementById('roleFilterIndicator').textContent = '';
-    
-    // Limpiar campo de búsqueda
-    document.getElementById('searchQuery').value = '';
-    
-    // Mostrar todas las filas
-    const rows = document.querySelectorAll('#usersTable tbody tr');
-    rows.forEach(row => {
-        row.style.display = '';
-    });
-    
-    // Efecto visual para indicar que se han limpiado los filtros
-    const clearButton = document.getElementById('clearAllFilters');
-    clearButton.classList.add('btn-success');
-    clearButton.classList.remove('btn-outline-danger');
-    
-    setTimeout(() => {
-        clearButton.classList.remove('btn-success');
-        clearButton.classList.add('btn-outline-danger');
-    }, 500);
-}
-
-// Event listeners
-document.addEventListener('DOMContentLoaded', function() {
-    // Listener para el campo de búsqueda
-    document.getElementById('searchQuery').addEventListener('input', applySearchFilter);
-    
-    // Listener para el botón de limpiar filtros
-    document.getElementById('clearAllFilters').addEventListener('click', clearAllFilters);
-    
-    // Animación para el botón de limpiar filtros
-    const clearButton = document.getElementById('clearAllFilters');
-    clearButton.addEventListener('mouseover', function() {
-        this.innerHTML = '<i class="fas fa-trash-alt fa-shake"></i>';
-    });
-    
-    clearButton.addEventListener('mouseout', function() {
-        this.innerHTML = '<i class="fas fa-trash-alt"></i>';
-    });
-});
-
-</script>
+<!-- Modal para Confirmar Eliminar Usuario -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="js/usuarios.js"></script>
@@ -296,6 +215,5 @@ document.addEventListener('DOMContentLoaded', function() {
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet">
 <!-- SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
-
 </body>
 </html>

@@ -17,19 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception('El email ya está en uso por otro usuario');
         }
 
-        // Verificar que no sea el último administrador si se está cambiando el rol
-        $stmt = $pdo->prepare("SELECT id_rol FROM usuarios WHERE id = ?");
-        $stmt->execute([$data['id']]);
-        $currentRole = $stmt->fetch(PDO::FETCH_ASSOC)['id_rol'];
-
-        if ($currentRole == 1 && $data['rol'] != 1) {
-            $stmt = $pdo->prepare("SELECT COUNT(*) as admin_count FROM usuarios WHERE id_rol = 1 AND id != ?");
-            $stmt->execute([$data['id']]);
-            if ($stmt->fetch(PDO::FETCH_ASSOC)['admin_count'] == 0) {
-                throw new Exception('No se puede cambiar el rol del último administrador');
-            }
-        }
-
         // Preparar la consulta base
         if (!empty($data['password'])) {
             // Si hay nueva contraseña, actualizarla

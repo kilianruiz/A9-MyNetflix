@@ -1,8 +1,10 @@
 <?php
 session_start();
-require_once '../../bbdd/db.php';
+require_once '../../bbdd/db.php'; // Ajusta la ruta según tu estructura
 
 try {
+    $pdo = conectarDB();
+
     // Obtener usuarios registrados
     $stmt = $pdo->query("
         SELECT 
@@ -10,7 +12,8 @@ try {
             u.nombre,
             u.email,
             u.fecha_registro,
-            r.nombre_rol
+            r.nombre_rol,
+            r.id_rol
         FROM usuarios u
         LEFT JOIN roles r ON u.id_rol = r.id_rol
         ORDER BY u.fecha_registro DESC
@@ -18,8 +21,8 @@ try {
     $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (!empty($usuarios)) {
-        echo '<table class="table">';
-        echo '<thead><tr><th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Fecha de Registro</th></tr></thead>';
+        echo '<table class="table table-striped">';
+        echo '<thead><tr><th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Fecha de Registro</th><th>Acciones</th></tr></thead>';
         echo '<tbody>';
         foreach ($usuarios as $usuario) {
             echo '<tr>';
@@ -28,6 +31,10 @@ try {
             echo '<td>' . htmlspecialchars($usuario['email']) . '</td>';
             echo '<td>' . htmlspecialchars($usuario['nombre_rol']) . '</td>';
             echo '<td>' . htmlspecialchars($usuario['fecha_registro']) . '</td>';
+            echo '<td>';
+            echo '<button class="btn btn-warning btn-editar-usuario" data-id="' . $usuario['id'] . '">Editar</button> ';
+            echo '<button class="btn btn-danger btn-eliminar-usuario ms-2" data-id="' . $usuario['id'] . '">Eliminar</button>';
+            echo '</td>';
             echo '</tr>';
         }
         echo '</tbody></table>';
