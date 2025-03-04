@@ -1,10 +1,8 @@
 <?php
 session_start();
-require_once '../../bbdd/db.php'; // Ajusta la ruta según tu estructura
+require_once '../../bbdd/db.php'; 
 
 try {
-
-    // Obtener usuarios registrados
     $stmt = $pdo->query("
         SELECT 
             u.id,
@@ -31,8 +29,15 @@ try {
             echo '<td>' . htmlspecialchars($usuario['nombre_rol']) . '</td>';
             echo '<td>' . htmlspecialchars($usuario['fecha_registro']) . '</td>';
             echo '<td>';
-            echo '<button class="btn btn-warning btn-editar-usuario" data-id="' . $usuario['id'] . '">Editar</button> ';
-            echo '<button class="btn btn-danger btn-eliminar-usuario ms-2" data-id="' . $usuario['id'] . '">Eliminar</button>';
+            echo '<a href="../proc/editUser.php?id=' . urlencode($usuario['id']) . '" 
+                    class="btn btn-sm btn-primary">
+                    <i class="fas fa-edit"></i> Editar
+                </a>';
+                  echo '<a href="../proc/deleteUser.php?id=' . urlencode($usuario['id']) . '" 
+                          class="btn btn-sm btn-danger"
+                          onclick="return confirm(\'¿Estás seguro de que quieres eliminar este usuario?\');">
+                          <i class="fas fa-trash"></i> Eliminar
+                        </a>';
             echo '</td>';
             echo '</tr>';
         }
@@ -41,6 +46,6 @@ try {
         echo '<p>No hay usuarios registrados.</p>';
     }
 } catch (PDOException $e) {
-    echo '<p>Error al obtener los usuarios: ' . htmlspecialchars($e->getMessage()) . '</p>';
+    echo '<p>Error al obtener los datos: ' . $e->getMessage() . '</p>';
 }
 ?>
