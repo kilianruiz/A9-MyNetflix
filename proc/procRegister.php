@@ -39,11 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $pdo->prepare("INSERT INTO registro_pendiente (nombre, email, password, fecha_registro) VALUES (?, ?, ?, NOW())");
         $stmt->execute([$nombre, $email, $hashedPassword]);
         
-        echo json_encode([
-            'success' => true,
-            'message' => 'Solicitud de registro enviada. Por favor, espera la aprobación del administrador.',
-            'pending' => true
-        ]);
+        Header('Location: ../index.php');
 
     } catch (PDOException $e) {
         error_log("Error en registro: " . $e->getMessage());
