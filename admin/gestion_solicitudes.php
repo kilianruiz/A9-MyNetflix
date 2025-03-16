@@ -121,8 +121,8 @@ try {
 
     <h2 class="mt-5 mb-4">Gestión de Usuarios <span id="roleFilterIndicator"></span></h2>
     <div class="d-flex gap-3 mb-4">
-        <button class="btn-nuevo" onclick="showUserModal()">
-            <a>Nuevo Usuario</a>
+        <button class="btn-nuevo" data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal">
+            <i class="fas fa-user-plus"></i> Nuevo Usuario
         </button>
         <a href="./gestionAdmin.php" class="btn-nuevo" id="btnNuevaPelicula">Películas</a>
     </div>
@@ -131,41 +131,159 @@ try {
     <!-- Aquí se cargará la tabla de usuarios -->
     </div>
 
-<!-- Modal para Editar Usuario -->
-<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <!-- Modal para Crear Usuario -->
+<div class="modal fade" id="nuevoUsuarioModal" tabindex="-1" aria-labelledby="nuevoUsuarioLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">Editar Usuario</h5>
+                <h5 class="modal-title" id="nuevoUsuarioLabel">Crear Nuevo Usuario</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="userForm">
-                    <input type="hidden" id="userId" name="userId">
+                <form id="nuevoUsuarioForm">
                     <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        <label for="nuevoNombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nuevoNombre" required>
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <label for="nuevoEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="nuevoEmail" required>
                     </div>
                     <div class="mb-3">
-                        <label for="rol" class="form-label">Rol</label>
-                        <select class="form-control" id="rol" name="rol">
-                            <?php foreach ($roles as $rol): ?>
-                                <option value="<?php echo $rol['id_rol']; ?>">
-                                    <?php echo htmlspecialchars($rol['nombre_rol']); ?>
-                                </option>
-                            <?php endforeach; ?>
+                        <label for="nuevoPassword" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="nuevoPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nuevoRol" class="form-label">Rol</label>
+                        <select class="form-control" id="nuevoRol" required>
+                            <!-- Opciones cargadas dinámicamente -->
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="btnGuardarUsuario">Guardar</button>
+                    <button type="submit" class="btn btn-primary">Crear</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal para Editar Usuario -->
+<div class="modal fade" id="editarUsuarioModal" tabindex="-1" aria-labelledby="editarUsuarioLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarUsuarioLabel">Editar Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editarUsuarioForm">
+                    <input type="hidden" id="editarId">
+                    <div class="mb-3">
+                        <label for="editarNombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="editarNombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editarEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editarEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editarPassword" class="form-label">Nueva Contraseña (opcional)</label>
+                        <input type="password" class="form-control" id="editarPassword">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editarRol" class="form-label">Rol</label>
+                        <select class="form-control" id="editarRol" required>
+                            <!-- Opciones cargadas dinámicamente -->
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+// Función para cargar roles dinámicamente en los select
+function cargarRoles() {
+    fetch('ajax/obtener_roles.php') // Ruta al archivo que devuelve los roles
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error('Error al cargar roles:', data.error);
+                return;
+            }
+
+            // Crear opciones para los select de roles
+            let opciones = data.map(rol => `<option value="${rol.id_rol}">${rol.nombre_rol}</option>`).join('');
+
+            // Asignar las opciones a los select de crear y editar usuario
+            document.getElementById('nuevoRol').innerHTML = opciones;
+            document.getElementById('editarRol').innerHTML = opciones;
+        })
+        .catch(error => console.error('Error al cargar roles:', error));
+}
+
+// Función para abrir el modal de edición con datos
+function editarUsuario(id, nombre, email, rol) {
+    document.getElementById('editarId').value = id;
+    document.getElementById('editarNombre').value = nombre;
+    document.getElementById('editarEmail').value = email;
+    document.getElementById('editarRol').value = rol; // Asegúrate de que este valor coincida con el ID del rol
+    new bootstrap.Modal(document.getElementById('editarUsuarioModal')).show();
+}
+
+// Agregar evento para los botones de edición en la tabla
+document.addEventListener('DOMContentLoaded', function () {
+    cargarRoles(); // Cargar roles dinámicamente
+
+    // Evento para cargar la tabla de usuarios
+    cargarTablaUsuarios();
+
+    // Crear Usuario
+    document.getElementById('nuevoUsuarioForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        let nombre = document.getElementById('nuevoNombre').value;
+        let email = document.getElementById('nuevoEmail').value;
+        let rol = document.getElementById('nuevoRol').value;
+
+        fetch('ajax/crear_usuario.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nombre, email, rol })
+        })
+        .then(response => response.json())
+        .then(data => {
+            Swal.fire('Éxito', data.message, 'success');
+            cargarTablaUsuarios();
+            document.getElementById('nuevoUsuarioForm').reset();
+            new bootstrap.Modal(document.getElementById('nuevoUsuarioModal')).hide();
+        })
+        .catch(error => Swal.fire('Error', 'No se pudo crear el usuario', 'error'));
+    });
+
+    // Editar Usuario
+    document.getElementById('editarUsuarioForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        let id = document.getElementById('editarId').value;
+        let nombre = document.getElementById('editarNombre').value;
+        let email = document.getElementById('editarEmail').value;
+        let rol = document.getElementById('editarRol').value;
+
+        fetch('ajax/editar_usuario.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, nombre, email, rol })
+        })
+        .then(response => response.json())
+        .then(data => {
+            Swal.fire('Éxito', data.message, 'success');
+            cargarTablaUsuarios();
+            new bootstrap.Modal(document.getElementById('editarUsuarioModal')).hide();
+        })
+        .catch(error => Swal.fire('Error', 'No se pudo actualizar el usuario', 'error'));
+    });
+});
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="js/usuarios.js"></script>

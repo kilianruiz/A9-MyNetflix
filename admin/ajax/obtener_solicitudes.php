@@ -18,7 +18,7 @@ try {
     $solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (!empty($solicitudes)) {
-        echo '<table class="table">';
+        echo '<table>';
         echo '<thead><tr><th>ID</th><th>Nombre</th><th>Email</th><th>Fecha de Solicitud</th><th>Acciones</th></tr></thead>';
         echo '<tbody>';
         foreach ($solicitudes as $solicitud) {
@@ -28,9 +28,9 @@ try {
             echo '<td>' . htmlspecialchars($solicitud['email']) . '</td>';
             echo '<td>' . htmlspecialchars($solicitud['fecha_registro']) . '</td>';
             echo '<td>';
-            echo '<button class="btn-aceptar" data-id="' . htmlspecialchars($solicitud['id_solicitud']) . '">Aceptar</button>';
+            echo '<button id="aceptar" class="btn btn-danger btn-sm" data-id="' . htmlspecialchars($solicitud['id_solicitud']) . '">Aceptar</button>';
             echo ' ';
-            echo '<button class="btn-rechazar" data-id="' . htmlspecialchars($solicitud['id_solicitud']) . '">Rechazar</button>';
+            echo '<button id="rechazar" class="btn btn-danger btn-sm" data-id="' . htmlspecialchars($solicitud['id_solicitud']) . '">Rechazar</button>';
             echo '</td>';
             echo '</tr>';
         }

@@ -47,7 +47,7 @@ function configurarPaginacion() {
 // Configurar los event listeners para los botones de acción
 function configurarBotonesAcciones() {
     // Event listeners para botones de aceptar solicitud
-    document.querySelectorAll('.btn-aceptar').forEach(btn => {
+    document.querySelectorAll('#aceptar').forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
             const id = this.getAttribute('data-id');
@@ -60,7 +60,7 @@ function configurarBotonesAcciones() {
     });
 
     // Event listeners para botones de rechazar solicitud
-    document.querySelectorAll('.btn-rechazar').forEach(btn => {
+    document.querySelectorAll('#rechazar').forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
             const id = this.getAttribute('data-id');
